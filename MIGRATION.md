@@ -1,0 +1,24 @@
+# Migration Guide
+
+## What remains compatible
+
+- Existing material, finish, prompt, selection, output, and structure recommendation references remain under `references/`.
+- Requests for packaging CMF advice still trigger the Skill and route to Module C.
+- Complete artwork may enter Module C directly; Module A and B are not mandatory prerequisites.
+
+## What changed
+
+- `SKILL.md` is now an orchestration entrypoint instead of a complete domain encyclopedia.
+- Executable requests use `scripts/skill_entry.py` and a stable JSON contract.
+- Every task receives an isolated Job Workspace and manifest.
+- Capability status is machine-readable. Documentation is no longer treated as an implemented tool.
+
+## Removed or moved
+
+- No web application existed in the baseline repository, so no web code was removed or migrated.
+- Detailed CMF knowledge remains in `references/` rather than being duplicated in `SKILL.md`.
+
+## Legacy dielines
+
+The external/local dieline generator is represented by an explicit adapter boundary. It is not silently invoked and no user-specific path is embedded. Model-specific deterministic implementations replace that adapter only after original-output comparison tests pass.
+

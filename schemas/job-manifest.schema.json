@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/packaging-assistant/job-manifest.schema.json",
+  "title": "Packaging Job Manifest",
+  "type": "object",
+  "required": ["job_id", "workflow", "status", "assets", "outputs", "manual_review_required"],
+  "properties": {
+    "job_id": {"type": "string", "minLength": 1},
+    "workflow": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["pending", "inspecting", "waiting_for_input", "ready", "running", "validating", "completed", "failed"]
+    },
+    "assets": {"type": "array"},
+    "outputs": {"type": "array"},
+    "warnings": {"type": "array"},
+    "errors": {"type": "array"},
+    "manual_review_required": {"type": "boolean"}
+  }
+}
+

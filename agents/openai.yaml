@@ -1,4 +1,4 @@
 interface:
-  display_name: "包装工艺顾问与效果图"
-  short_description: "识别刀模/包装结构，推荐材质工艺，并生成真实工艺效果图提示词或 image2 效果图。"
-  default_prompt: "使用包装工艺顾问与效果图 skill：请先识别图片类型和包装结构，再用选择题确认材质、工艺和重点区域，最后输出工艺方案、效果图提示词和印前注意事项。"
+  display_name: "包装设计助理 Harness"
+  short_description: "对话生成包装结构 SVG，编排包装信息，并处理 CMF 工艺效果图工作流。"
+  default_prompt: "使用 $packaging-design-assistant 识别我的包装目标，路由到结构模板、内容编排或 CMF 模块，并如实返回输出、验证结果和人工复核边界。"

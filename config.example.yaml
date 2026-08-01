@@ -1,0 +1,12 @@
+# Copy to config.yaml and keep secrets out of version control.
+workspace_root: ./output
+providers:
+  mock:
+    enabled: true
+  vision:
+    enabled: false
+  image_generation:
+    enabled: false
+  search:
+    enabled: false
+

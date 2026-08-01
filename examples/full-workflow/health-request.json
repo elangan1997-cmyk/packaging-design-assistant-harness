@@ -1,0 +1,6 @@
+{
+  "action": "health_check",
+  "request_id": "example-health",
+  "parameters": {}
+}
+

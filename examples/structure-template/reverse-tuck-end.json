@@ -1,0 +1,17 @@
+{
+  "action": "structure_template",
+  "request_id": "example-rte",
+  "parameters": {
+    "model_code": "carton.reverse_tuck_end",
+    "model_version": "1.0",
+    "dimensions": {
+      "length": 80,
+      "width": 40,
+      "height": 120,
+      "unit": "mm",
+      "dimension_type": "finished_outer"
+    },
+    "output_mode": "DESIGN_TEMPLATE"
+  }
+}
+
