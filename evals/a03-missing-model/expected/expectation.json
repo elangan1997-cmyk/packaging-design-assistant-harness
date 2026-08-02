@@ -1,0 +1,9 @@
+{
+  "outputs": [],
+  "pass_condition": "returns one model-choice prompt and preserves dimensions",
+  "route": "clarification_required",
+  "tools": [
+    "model registry"
+  ],
+  "warnings": []
+}

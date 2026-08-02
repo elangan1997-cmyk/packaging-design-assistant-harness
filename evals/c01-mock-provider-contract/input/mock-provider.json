@@ -1,0 +1,12 @@
+{
+  "mockup": {
+    "allow_mock": true
+  },
+  "providers": [
+    {
+      "enabled": true,
+      "name": "mock",
+      "type": "mock"
+    }
+  ]
+}

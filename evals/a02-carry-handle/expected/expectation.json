@@ -1,0 +1,16 @@
+{
+  "outputs": [
+    "structure_spec.json",
+    "template.svg",
+    "validation_report.json"
+  ],
+  "pass_condition": "deterministic SVG and validation outputs are produced",
+  "route": "structure_template",
+  "tools": [
+    "deterministic geometry",
+    "SVG validator"
+  ],
+  "warnings": [
+    "REQUIRES_MANUFACTURER_REVIEW"
+  ]
+}

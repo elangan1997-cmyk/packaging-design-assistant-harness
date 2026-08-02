@@ -1,0 +1,20 @@
+{
+  "action": "mockup_render",
+  "parameters": {
+    "artwork": "${CASE}/input/completed-artwork.svg",
+    "config": "${CASE}/input/mock-provider.json",
+    "dimensions": {
+      "height": 120,
+      "length": 80,
+      "unit": "mm",
+      "width": 40
+    },
+    "finishes": [
+      {
+        "target": "brand mark",
+        "type": "foil"
+      }
+    ],
+    "material": "350 gsm SBS paperboard"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/packaging-assistant/content-spec.schema.json",
+  "title": "Packaging Content Specification",
+  "type": "object",
+  "required": ["schema_version", "jurisdiction", "product_category", "fields"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "jurisdiction": {"type": "string"},
+    "product_category": {"type": "string"},
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field_id", "field_type", "value", "status", "source", "panel"],
+        "properties": {
+          "field_id": {"type": "string", "pattern": "^field-"},
+          "field_type": {"type": "string"},
+          "value": {"type": "string"},
+          "status": {
+            "enum": ["confirmed", "user_provided", "source_derived", "generated", "missing", "uncertain", "review_required", "not_applicable"]
+          },
+          "source": {
+            "type": "object",
+            "required": ["type", "reference"]
+          },
+          "panel": {"type": "string", "pattern": "^panel-"}
+        }
+      }
+    }
+  }
+}

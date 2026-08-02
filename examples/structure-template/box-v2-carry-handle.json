@@ -1,0 +1,16 @@
+{
+  "model_code": "carton.box_v2.carry_handle",
+  "dimensions": {
+    "length": 100,
+    "width": 60,
+    "height": 160,
+    "unit": "mm",
+    "dimension_type": "finished_outer"
+  },
+  "shrink": 0.5,
+  "tuck_height": 12,
+  "glue_width": 11,
+  "bleed": 3,
+  "safe_margin": 3,
+  "output_mode": "DESIGN_TEMPLATE"
+}

@@ -1,0 +1,11 @@
+{
+  "output_names": [
+    "content-layout.svg",
+    "content-spec.json",
+    "missing-fields.md",
+    "review-checklist.md",
+    "source-report.md"
+  ],
+  "status": "completed",
+  "success": true
+}

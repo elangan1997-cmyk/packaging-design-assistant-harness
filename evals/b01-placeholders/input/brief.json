@@ -1,0 +1,10 @@
+{
+  "brand": {
+    "name": "测试品牌"
+  },
+  "jurisdiction": "CN",
+  "product": {
+    "name": "观赏鱼专用盐",
+    "net_content": "500 g"
+  }
+}

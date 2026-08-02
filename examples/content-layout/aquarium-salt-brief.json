@@ -1,0 +1,30 @@
+{
+  "jurisdiction": "CN",
+  "product_category": "aquarium_product",
+  "brand": {
+    "name": "JUST CLEAN",
+    "slogan": ""
+  },
+  "product": {
+    "name": "观赏鱼专用盐",
+    "variant": "",
+    "net_content": "500g",
+    "specification": "",
+    "ingredients": [],
+    "materials": [],
+    "directions": "",
+    "warnings": [],
+    "storage": ""
+  },
+  "business": {
+    "manufacturer": "",
+    "address": "",
+    "contact": "",
+    "website": ""
+  },
+  "standards": {
+    "execution_standard": "",
+    "license_number": "",
+    "certifications": []
+  }
+}

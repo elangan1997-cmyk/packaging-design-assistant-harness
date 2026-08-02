@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cmf-plan.schema.json",
+  "title": "Packaging CMF Plan",
+  "type": "object",
+  "required": ["artwork_sha256", "dimensions", "material", "finishes", "protection_rules", "production_file"],
+  "properties": {
+    "artwork_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dimensions": {"type": "object"},
+    "structure": {"type": "string"},
+    "material": {"type": "string"},
+    "finishes": {"type": "array"},
+    "camera": {},
+    "background": {},
+    "protection_rules": {"type": "array", "items": {"type": "string"}},
+    "production_file": {"const": false},
+    "schema_version": {"type": "string"}
+  },
+  "additionalProperties": true
+}

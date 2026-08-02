@@ -1,0 +1,15 @@
+{
+  "output_names": [
+    "cmf-plan.json",
+    "generation-record.json",
+    "mockup.png",
+    "retry-record.json",
+    "review-checklist.md",
+    "visual-qa.json"
+  ],
+  "status": "manual_review",
+  "success": true,
+  "warnings_contains": [
+    "MOCK_OUTPUT_NOT_A_REAL_CMF_RENDER"
+  ]
+}

@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="260.5mm" height="216.5mm" viewBox="-16 -177.5 260.5 216.5">
+  <title>Box 2.0 锁底盒结构设计模板</title>
+  <metadata id="PACKAGING_STRUCTURE_METADATA">{"dimensions_mm":{"height":120.0,"length":80.0,"width":40.0},"model_code":"carton.box_v2.lock_bottom","model_version":"box-v2.0-lock-bottom-1.0","output_mode":"DESIGN_TEMPLATE","parameters_mm":{"bleed":3.0,"glue_width":11.0,"safe_margin":3.0,"shrink":0.5,"tuck_height":12.0},"schema_version":"1.0","warning":"REQUIRES_MANUFACTURER_REVIEW"}</metadata>
+  <metadata id="packaging-content-metadata">{"field_count":22,"jurisdiction":"CN","manual_review_required":true,"product_category":"","schema_version":"1.0"}</metadata>
+  <style>
+    .cut { fill: none; stroke: #000000; stroke-width: 0.1; vector-effect: non-scaling-stroke; }
+    .crease { fill: none; stroke: #e60012; stroke-width: 0.1; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+    .panel-guide { fill: none; stroke: #00a0e9; stroke-width: 0.08; stroke-dasharray: 1 1; vector-effect: non-scaling-stroke; }
+    .panel-label { fill: #666666; font-family: sans-serif; font-size: 3px; text-anchor: middle; }
+    .review-note { fill: #c00000; font-family: sans-serif; font-size: 3px; }
+  </style>
+  <g id="LAYER_CUT" inkscape:groupmode="layer" inkscape:label="LAYER_CUT">
+    <path id="CUT_TOP_TUCK_ARCH" class="cut" data-kind="path" data-commands="M c h c" d="M0.5 -160.5 c0 0 0 -12 12 -12 h55 c12 0 12 12 12 12" />
+    <polyline id="CUT_TOP_LEFT_OUTER" class="cut" data-kind="polyline" points="0,-120 0,-160.5 7,-160.5 7,-159" />
+    <polyline id="CUT_TOP_DUST_LEFT" class="cut" data-kind="polyline" points="80,-120 83,-123 86,-146.25 112.5,-146.25 117.5,-127 119.5,-125 119.5,-120" />
+    <polyline id="CUT_TOP_RIGHT_OUTER" class="cut" data-kind="polyline" points="80,-120 80,-160.5 73,-160.5 73,-159" />
+    <polyline id="CUT_TOP_DUST_RIGHT" class="cut" data-kind="polyline" points="200.5,-120 200.5,-125 202.5,-127 207.5,-146.25 233.5,-146.25 236.5,-123 239.5,-120" />
+    <polyline id="CUT_BOTTOM_LOCK_CENTER" class="cut" data-kind="polyline" points="120,0 140,20 140,30 180,30 180,20 200,0" />
+    <polyline id="CUT_BOTTOM_RIGHT_PARTIAL" class="cut" data-kind="polyline" points="239.5,0 220,20 220,22" />
+    <polyline id="CUT_BOTTOM_LEFT_PARTIAL" class="cut" data-kind="polyline" points="80,0 100,20 100,22" />
+    <polyline id="CUT_BOTTOM_PANEL_1" class="cut" data-kind="polyline" points="0,0 0,30 20,30 20,20 60,20 60,30 80,30 80,0" />
+    <polyline id="CUT_GLUE_TAB" class="cut" data-kind="polyline" points="0,-120 -11,-117.0526 -11,-2.9474 0,0" />
+    <path id="CUT_BOTTOM_LEFT_CURVE" class="cut" data-kind="path" data-commands="M c" d="M100 22 c0 0 0 6 6 6" />
+    <path id="CUT_BOTTOM_RIGHT_CURVE" class="cut" data-kind="path" data-commands="M c" d="M214 28 c0 0 6 0 6 -6" />
+    <polyline id="CUT_BOTTOM_RIGHT_INNER" class="cut" data-kind="polyline" points="214,28 200,28 200,0" />
+    <polyline id="CUT_BOTTOM_LEFT_INNER" class="cut" data-kind="polyline" points="106,28 120,28 120,0" />
+    <line id="CUT_TOP_MAIN" class="cut" data-kind="line" x1="119.5" y1="-120" x2="200.5" y2="-120" />
+    <line id="CUT_RIGHT_VERTICAL" class="cut" data-kind="line" x1="239.5" y1="0" x2="239.5" y2="-120" />
+  </g>
+  <g id="LAYER_CREASE" inkscape:groupmode="layer" inkscape:label="LAYER_CREASE">
+    <line id="CREASE_LEFT_VERTICAL" class="crease" data-kind="line" x1="0" y1="0" x2="0" y2="-120" />
+    <polyline id="CREASE_PANEL_2" class="crease" data-kind="polyline" points="80,-120 80,0 120,0 120,-120 80,-120" />
+    <line id="CREASE_PANEL_1_BOTTOM" class="crease" data-kind="line" x1="0" y1="0" x2="80" y2="0" />
+    <polyline id="CREASE_PANEL_4" class="crease" data-kind="polyline" points="239.5,-120 200,-120 200,0 239.5,0" />
+    <line id="CREASE_TOP_PANEL_1" class="crease" data-kind="line" x1="0" y1="-120.5" x2="80" y2="-120.5" />
+    <line id="CREASE_TUCK" class="crease" data-kind="line" x1="7" y1="-160" x2="73" y2="-160" />
+    <line id="CREASE_PANEL_3_BOTTOM" class="crease" data-kind="line" x1="120" y1="0" x2="200" y2="0" />
+  </g>
+  <g id="LAYER_BLEED" inkscape:groupmode="layer" inkscape:label="LAYER_BLEED" />
+  <g id="LAYER_SAFE" inkscape:groupmode="layer" inkscape:label="LAYER_SAFE" />
+  <g id="LAYER_PANEL_LABELS" inkscape:groupmode="layer" inkscape:label="LAYER_PANEL_LABELS">
+    <text id="LABEL_panel-front" class="panel-label" x="40" y="-60">正面</text>
+    <text id="LABEL_panel-left" class="panel-label" x="100" y="-60">侧面 A</text>
+    <text id="LABEL_panel-back" class="panel-label" x="160" y="-60">背面</text>
+    <text id="LABEL_panel-right" class="panel-label" x="219.75" y="-60">侧面 B</text>
+    <text id="LABEL_panel-glue" class="panel-label" x="-5.5" y="-60">糊口</text>
+  </g>
+  <g id="LAYER_DIMENSIONS" inkscape:groupmode="layer" inkscape:label="LAYER_DIMENSIONS" />
+  <g id="LAYER_ARTWORK" inkscape:groupmode="layer" inkscape:label="LAYER_ARTWORK">
+    <g id="field-brand-name" data-field-type="brand-name" data-source="user_input" data-source-reference="brand.name" data-status="user_provided" data-panel="panel-front" data-layout-box="0.0,-120.0,80.0,120.0">
+      <text x="3" y="-114.2" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="3" dy="0">测试品牌</tspan>
+      </text>
+    </g>
+    <g id="field-brand-slogan" data-field-type="brand-slogan" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-front" data-layout-box="0.0,-120.0,80.0,120.0">
+      <text x="3" y="-108.8" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="3" dy="0">[待提供：品牌口号]</tspan>
+      </text>
+    </g>
+    <g id="field-product-name" data-field-type="product-name" data-source="user_input" data-source-reference="product.name" data-status="user_provided" data-panel="panel-front" data-layout-box="0.0,-120.0,80.0,120.0">
+      <text x="3" y="-103.4" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="3" dy="0">观赏鱼专用盐</tspan>
+      </text>
+    </g>
+    <g id="field-product-variant" data-field-type="product-variant" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-front" data-layout-box="0.0,-120.0,80.0,120.0">
+      <text x="3" y="-98" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="3" dy="0">[待提供：产品规格/型号]</tspan>
+      </text>
+    </g>
+    <g id="field-product-description" data-field-type="product-description" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-114.2" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：产品描述]</tspan>
+      </text>
+    </g>
+    <g id="field-selling-points" data-field-type="selling-points" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-right" data-layout-box="200.0,-120.0,39.5,120.0">
+      <text x="203" y="-114.2" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="203" dy="0">[待提供：产品卖点]</tspan>
+      </text>
+    </g>
+    <g id="field-net-content" data-field-type="net-content" data-source="user_input" data-source-reference="product.net_content" data-status="user_provided" data-panel="panel-front" data-layout-box="0.0,-120.0,80.0,120.0">
+      <text x="3" y="-92.6" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="3" dy="0">净含量：500 g</tspan>
+      </text>
+    </g>
+    <g id="field-specification" data-field-type="specification" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-left" data-layout-box="80.0,-120.0,40.0,120.0">
+      <text x="83" y="-114.2" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="83" dy="0">[待提供：规格]</tspan>
+      </text>
+    </g>
+    <g id="field-ingredients" data-field-type="ingredients" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-108.8" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：成分/配料]</tspan>
+      </text>
+    </g>
+    <g id="field-materials" data-field-type="materials" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-103.4" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：材料信息]</tspan>
+      </text>
+    </g>
+    <g id="field-directions" data-field-type="directions" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-98" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：使用方法]</tspan>
+      </text>
+    </g>
+    <g id="field-warnings" data-field-type="warnings" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-92.6" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：警示语]</tspan>
+      </text>
+    </g>
+    <g id="field-storage" data-field-type="storage" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-87.2" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：贮存条件]</tspan>
+      </text>
+    </g>
+    <g id="field-manufacturer" data-field-type="manufacturer" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-81.8" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：生产企业名称]</tspan>
+      </text>
+    </g>
+    <g id="field-address" data-field-type="address" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-76.4" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：生产地址]</tspan>
+      </text>
+    </g>
+    <g id="field-contact" data-field-type="contact" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-71" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待提供：联系方式]</tspan>
+      </text>
+    </g>
+    <g id="field-website" data-field-type="website" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-right" data-layout-box="200.0,-120.0,39.5,120.0">
+      <text x="203" y="-108.8" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="203" dy="0">[待提供：网站]</tspan>
+      </text>
+    </g>
+    <g id="field-execution-standard" data-field-type="execution-standard" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-left" data-layout-box="80.0,-120.0,40.0,120.0">
+      <text x="83" y="-108.8" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="83" dy="0">[待确认：执行标准]</tspan>
+      </text>
+    </g>
+    <g id="field-license-number" data-field-type="license-number" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-left" data-layout-box="80.0,-120.0,40.0,120.0">
+      <text x="83" y="-103.4" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="83" dy="0">[待确认：许可证编号]</tspan>
+      </text>
+    </g>
+    <g id="field-certifications" data-field-type="certifications" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-left" data-layout-box="80.0,-120.0,40.0,120.0">
+      <text x="83" y="-98" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="83" dy="0">[待确认：认证信息]</tspan>
+      </text>
+    </g>
+    <g id="field-barcode-placeholder" data-field-type="barcode-placeholder" data-source="missing" data-source-reference="" data-status="missing" data-panel="panel-back" data-layout-box="120.0,-120.0,80.0,120.0">
+      <text x="123" y="-65.6" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="123" dy="0">[待生成或粘贴：商品条码]</tspan>
+      </text>
+    </g>
+    <g id="field-review-note" data-field-type="review-note" data-source="system_rule" data-source-reference="REQUIRES_COMPLIANCE_REVIEW" data-status="review_required" data-panel="panel-right" data-layout-box="200.0,-120.0,39.5,120.0">
+      <text x="203" y="-103.4" font-family="sans-serif" font-size="2.8" fill="#111111">
+        <tspan x="203" dy="0">包装信息草稿；法规、声明和企业信息须人</tspan>
+        <tspan x="203" dy="4.2">工复核。</tspan>
+      </text>
+    </g>
+  </g>
+  <g id="LAYER_CONTENT_GUIDES" inkscape:groupmode="layer" inkscape:label="LAYER_CONTENT_GUIDES">
+    <rect id="panel-front" class="panel-guide" x="0" y="-120" width="80" height="120" data-panel-name="正面" data-role="front" data-panel-type="artwork-panel" />
+    <rect id="panel-left" class="panel-guide" x="80" y="-120" width="40" height="120" data-panel-name="侧面 A" data-role="left" data-panel-type="artwork-panel" />
+    <rect id="panel-back" class="panel-guide" x="120" y="-120" width="80" height="120" data-panel-name="背面" data-role="back" data-panel-type="artwork-panel" />
+    <rect id="panel-right" class="panel-guide" x="200" y="-120" width="39.5" height="120" data-panel-name="侧面 B" data-role="right" data-panel-type="artwork-panel" />
+    <rect id="panel-glue" class="panel-guide" x="-11" y="-117.0526" width="11" height="114.1051" data-panel-name="糊口" data-role="glue" data-panel-type="glue-flap" />
+  </g>
+  <g id="LAYER_REVIEW_NOTES" inkscape:groupmode="layer" inkscape:label="LAYER_REVIEW_NOTES">
+    <text id="NOTE_MANUFACTURER_REVIEW" class="review-note" x="0" y="0">DESIGN_TEMPLATE · REQUIRES_MANUFACTURER_REVIEW</text>
+  </g>
+  <g id="LAYER_NOTES" inkscape:groupmode="layer" inkscape:label="LAYER_NOTES" />
+</svg>

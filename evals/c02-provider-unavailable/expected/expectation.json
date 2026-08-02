@@ -1,0 +1,10 @@
+{
+  "outputs": [],
+  "pass_condition": "fails explicitly before any unapproved or invalid render",
+  "route": "mockup_render",
+  "tools": [
+    "asset classifier",
+    "capability router"
+  ],
+  "warnings": []
+}

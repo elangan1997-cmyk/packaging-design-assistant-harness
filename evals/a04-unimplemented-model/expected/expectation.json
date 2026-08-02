@@ -1,0 +1,9 @@
+{
+  "outputs": [],
+  "pass_condition": "does not substitute another box geometry",
+  "route": "structure_template",
+  "tools": [
+    "model registry"
+  ],
+  "warnings": []
+}

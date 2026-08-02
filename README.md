@@ -1,215 +1,195 @@
-# 包装 CMF 工艺效果图 Skill
+# 包装设计助理 Harness 2.0
 
-> 针对包装结构的 CMF（色彩/材质/表面处理）工艺方案推荐与 AI 图生图效果图生成。支持刀模图、平面稿、3D 效果图、瓶装、软包装等多种输入，自动拆解面板、匹配盒型/瓶型/袋型、生成工艺效果图。
+这是一个本地优先、对话驱动的包装设计 Harness。普通用户只需要在 Codex、Claude Code 或其他支持 Skill 的 Agent 中说明包装类型、尺寸和任务目标；Agent 负责调用统一 Python 入口，不需要网页、Web Server 或 Node.js。
 
-## 功能
+## 2.0 快速使用说明
 
-| 功能 | 说明 |
-|---|---|
-| 图像识别 | 自动识别刀模图/平面稿/3D 效果图/工艺标注图的角色 |
-| 包装类型判断 | 盒型（天地盖/反向插锁/飞机盒等）、瓶装（玻璃/PET/亚克力等）、软包装（自立袋/八边封/吸嘴袋等） |
-| CMF 方案推荐 | 根据包装类型和定位推荐材质+工艺组合、工艺分布表、印前注意事项 |
-| 面板自动拆解 | 从 SVG/刀模图自动检测网格、拆分为独立面板图片 |
-| ⛔ 物理尺寸确认 | **强制步骤**：所有包装类型必须先确认实际 mm 尺寸才能生成，缺尺寸则停止 |
-| AI 图生图生成 | 将拆解后的面板+标注图传给图像模型，生成 3D 效果图 |
-| 瓶器工艺支持 | 喷涂、电镀、蒙砂、丝印、烫金、烤花、收缩套标、模内标等 |
-| 软包装工艺支持 | 镭射膜、铝箔复合、哑亮对比、拉链、吸嘴、易撕口等 |
-| 特殊材质支持 | 镭射银卡纸、逆向 UV、局部露银、银龙 PET、触感膜、珠光特种纸等 |
+安装 Skill 后，直接在 Codex 等对话里说需求即可，不需要安装 Illustrator 脚本，也不需要自己写 SVG。
+
+### 只生成刀模 SVG
+
+直接说盒型、尺寸和输出要求：
+
+```text
+做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模。
+```
+
+支持的盒型包括：直线盒、锁底盒、飞机盒、上盖盒、同向盖、粘底盒、挂耳盒、手提盒和纸箱。
+
+如果只说了尺寸、没有说盒型，Agent 会先列出盒型选项，让你选择后再生成；已经提供的尺寸不会丢失。“其它”盒型目前会明确返回未实现，不会用近似盒型冒充。
+
+### 继续做 CMF 包装效果图
+
+之前的 CMF 包装效果图功能保留在 2.0 中，没有被盒型功能替换。已有完成设计稿、旧版效果图或 CMF 参考图时，直接说明：
+
+```text
+保留这张包装的盒型、文字、Logo、颜色和版式，尺寸 80 × 40 × 120 mm，做哑膜加 Logo 局部 UV 的包装效果图。
+```
+
+CMF 流程会继续保留原稿结构和版式，只在指定区域表现材质与工艺；原有的材质库、工艺规则、提示词和 Provider 配置仍在 `references/`、`schemas/` 和 Module C 中。真实效果图需要用户确认并配置图像 Provider；Mock 结果只是测试输出，必须人工复核。
+
+注意：空白刀模只能生成结构模板，不能直接当作完成设计稿制作最终 CMF 效果图。效果图也不能替代 Illustrator/CAD 刀模确认、打样和印前文件。
+
+### 三句话记住
+
+1. **盒型 + 尺寸** → 生成可复制进 Illustrator 的 SVG 刀模。
+2. **完成设计稿 + 尺寸 + 材质/工艺** → 继续生成 CMF 包装效果图。
+3. **没有盒型** → 先选盒型；**没有真实 Provider** → 只做测试/规划，不冒充真实效果图。
+
+## 模块
+
+- **Module A — Structure Template**：确定性生成可复制、可在 Illustrator 中继续编辑的 SVG 结构模板。
+- **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
+- **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
+
+当前 `2.0.0` 已完成架构底座、证据式自动路由、九个经 Illustrator SVG 黑盒回归验证的 Module A 盒型、Module B 内容编排闭环、Module C Provider/视觉 QA，以及 12 案例 Evals 和完整工作流 Demo。`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱` 可直接生成 SVG。“其它”需要自定义结构定义，保持 `not_implemented`。飞机盒使用用户提供的 `资源 9.svg`，默认按内尺寸和 `0.3 mm` 纸厚建模，并保留 `5 mm` 出血记录。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
+
+## 自然语言使用
+
+安装为 Skill 后可以直接说：
+
+```text
+做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模模板。
+```
+
+也可以说：
+
+```text
+做一个手提盒，100 × 60 × 160 mm，生成 SVG 刀模模板。
+```
+
+或：
+
+```text
+这是空白刀模和产品资料。把包装字段整理到正面、背面和侧面，不要改刀线。
+```
+
+Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通用户不必手动运行命令。
+
+如果用户只提供尺寸、没有说明盒型，Harness 返回 `status: needs_input` 和机器可读的 `choice_prompt`。Agent 必须显示盒型选项，让用户用名称或序号选择；已提供的尺寸继续保留。
 
 ## 安装
 
-### Claude Code
+```bash
+./install.sh
+```
+
+要求 Python 3.9 或更高版本。安装只增加 Python 包和 PyYAML，不安装 Node.js。默认不调用任何付费 API。
+
+## 统一入口
 
 ```bash
-# 克隆到 Claude Code skills 目录
-git clone https://github.com/elangan1997-cmyk/packaging-cmf-finishes-skill.git \
-  ~/.claude/skills/packaging-cmf-finishes
+.venv/bin/python scripts/skill_entry.py \
+  --request examples/full-workflow/health-request.json \
+  --output output/
 ```
 
-### Codex CLI
+请求格式：
+
+```json
+{
+  "action": "structure_template",
+  "request_id": "job-001",
+  "parameters": {}
+}
+```
+
+支持的 action：`structure_template`、`content_layout`、`mockup_render`、`inspect`、`route`、`validate`、`health_check`。实际可用状态以健康检查的 capability manifest 为准。
+
+### 已识别的盒型2.0模型
+
+`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`、`其它` 已拆成十个模型 ID。除 `其它` 外，九个确定盒型均已完成独立 SVG fixture 回归；“其它”返回模型级 `NOT_IMPLEMENTED`，绝不转用近似结构。详细审计见 `reports/BOX_V2_SUPPLIED_FIXTURE_AUDIT.md`。
+
+参数示例见 `examples/structure-template/box-v2-lock-bottom.json` 和 `examples/structure-template/box-v2-carry-handle.json`：
 
 ```bash
-# 克隆到 Codex skills 目录
-git clone https://github.com/elangan1997-cmyk/packaging-cmf-finishes-skill.git \
-  ~/.codex/skills/packaging-cmf-finishes
+packaging-assistant --output output/ structure \
+  --spec examples/structure-template/box-v2-lock-bottom.json
 ```
 
-## 使用方式
+注意：盒型2.0 的“手提盒”是折叠纸盒结构，不等同于独立 F5“手提袋 Pro”纸袋结构。
 
-### ⛔ 必填信息
+### Module B 内容编排
 
-**所有包装类型在生成前必须提供实际物理尺寸（mm）。如果用户未提供尺寸，skill 会停下来询问，不会继续生成。** 用户说「按常规来」时使用内置默认值。
+Module B 接收 Harness 生成的空白 SVG 模板和 JSON 产品资料，输出：
 
-### 案例示范
+- `content-layout.svg`
+- `content-spec.json`
+- `source-report.md`
+- `missing-fields.md`
+- `review-checklist.md`
 
-#### ① 盒型包装 — 镭射银卡纸彩盒
+它只写入 `LAYER_ARTWORK`，不会修改切线、压痕、出血和安全区图层。企业、地址、许可证、标准号、认证、成分和功效等缺失信息使用明确占位符，不会自动编造。当前版本不自动执行法规搜索，所有字段仍需人工复核。
 
-```
-帮我把这个 SVG 生成 3D 效果图，用镭射银卡纸 + 逆向 UV + 局部露银。
-这是一个反向插锁盒，50g 开心果小包装。
-
-⛔ 必填尺寸：折叠后盒子约 80×80×30 mm（宽×高×深）
-```
-
-#### ② 瓶装包装 — 精华液玻璃瓶
-
-```
-这个玻璃瓶帮我出效果图，瓶身底部渐变喷涂（深蓝→透白），银龙 PET 不干胶标签。
-
-⛔ 必填尺寸：瓶身高 120 mm，直径 40 mm，标签高 50 mm × 宽 120 mm
+```bash
+packaging-assistant --output output/ content \
+  --template output/template.svg \
+  --brief examples/content-layout/aquarium-salt-brief.json
 ```
 
-#### ③ 软包装 — 自立袋
+### Module C Provider 效果图与视觉 QA
 
-```
-这个自立袋平面稿帮我生成 3D 效果图，用镭射膜 + 哑亮对比 + 拉链封口。
+Module C 支持 Host、OpenAI-compatible、Custom REST 和 Mock 四类适配器。Provider 按配置顺序执行，失败时有限重试和回退；真实外部 Provider 必须设置 `allow_external_api: true`，Mock 必须设置 `allow_mock: true`。API Key 只能通过配置中的环境变量名称读取，不写入仓库、输出或错误记录。
 
-⛔ 必填尺寸：袋高 200 mm，袋宽 135 mm，底部折叠深度 70 mm
-```
-
-#### ④ 纸巾软包装 — PE 膜枕式包
-
-```
-这个纸巾包装平面稿帮我生成效果图，纯 PE 膜 + 柔印 + 易撕口。
-
-⛔ 必填尺寸：包装约 120×80×40 mm（高×宽×厚）
+```bash
+cp config.example.yaml config.yaml
+# 填写真实尺寸、材质、Provider endpoint/model 和环境变量名后：
+packaging-assistant --output output/ mockup \
+  --artwork completed-artwork.svg \
+  --config config.yaml
 ```
 
-### 基本用法
+输出 `mockup.png`、`cmf-plan.json`、`generation-record.json`、`visual-qa.json`、`retry-record.json` 和 `review-checklist.md`。视觉 QA 最多自动重试两次；仍不通过、不可修复或使用 Mock 时状态为 `manual_review`。
 
-在 Claude Code 或 Codex CLI 中，直接发送包装文件即可自动触发：
+## CLI
 
-```
-/Volumes/你的项目路径/包装设计稿.svg
-```
-
-或带上完整需求（含尺寸、材质、工艺）：
-
-```
-帮我把这个 SVG 生成 3D 效果图，用镭射银卡纸 + 逆向 UV + 局部露银。
-这是一个反向插锁盒，50g 开心果小包装。
-尺寸：80×80×30 mm（宽×高×深）
-```
-
-### 支持的输入类型
-
-| 输入 | 自动识别为 |
-|---|---|
-| SVG / PDF / AI 刀模图 | 平面稿 + 结构（自动拆面板） |
-| JPG / PNG 3D 渲染图 | 受保护原图（在其上叠加 CMF） |
-| 工艺标注图（红框/标注） | 工艺区域映射参考 |
-| 材质/工艺参考图 | 风格参考 |
-
-### 自动执行流程
-
-```
-用户发文件
-  → 1. 分析输入（识别包装类型、文字、工艺区域）
-  → 2. 确认材质/工艺（如未指定则推荐）
-  → ⛔ 3. 确认物理尺寸（强制步骤，缺尺寸则停止，不问不生成）
-  → 4. 渲染 SVG + 检测刀模网格（盒型）/ 面板分析（袋型/瓶型）
-  → 5. 拆分面板为独立图片 + 制作标注图
-  → 6. 打包面板 + 标注图传给图像模型
-  → 7. 生成 3D 工艺效果图
+```bash
+packaging-assistant inspect <input>
+packaging-assistant route <request.json>
+packaging-assistant structure --spec <file>
+packaging-assistant content --template <svg> --brief <json>
+packaging-assistant mockup --artwork <file> --config <yaml>
+packaging-assistant run --job <job.json> --dry-run
+packaging-assistant validate <file>
+packaging-assistant health-check
 ```
 
-### 触发关键词
+Dry Run 只报告路由、缺失输入、Provider、费用可能性、预计输出和人工复核项，不会调用真实 Provider。
 
-包装工艺、刀模工艺、包装效果图、工艺效果图、包装 CMF 效果图、材质工艺效果、识别刀模、根据刀模生成效果图、这个盒型怎么做工艺、这个包装适合什么材质、局部 UV、烫金、烫银、击凸、压凹、特种纸、银龙 PET、PET 标签、覆膜、光油、逆向 UV、镭射银卡纸、瓶器工艺、瓶身喷涂、电镀、蒙砂、收缩套标、模内标、瓶装包装、标签材质、丝印瓶身、自立袋、八边封袋、三边封袋、拉链袋、吸嘴袋、铝箔袋、复合膜、纸巾包装、软包装、包装工艺渲染
+自动路由同时使用用户目标、Asset Classifier 和参数事实，输出 `route`、`confidence`、`missing_fields`、`next_action`、`needs_clarification` 和 `evidence`。不明确或冲突时每次只提出一个关键问题。
 
-## 支持的包装类型
+## Python API
 
-### 盒型
-| 盒型 | 说明 |
-|---|---|
-| 天地盖硬纸板礼盒 | 盖子+底座两件式，灰板裱纸，高端礼品 |
-| 反向插锁盒 | 单片卡纸，上下插舌方向相反，食品/化妆品小包装 |
-| 插口盒 | 单片卡纸，两端同向插舌 |
-| 飞机盒 | 单片折叠，底部自锁结构，电商物流 |
-| 抽屉盒 | 外套+内抽屉两件式 |
-| 书型盒 | 磁吸翻盖，精装书式 |
+```python
+from packaging_assistant import run_packaging_request
 
-### 瓶装
-| 类型 | 说明 |
-|---|---|
-| 玻璃瓶 + 不干胶标签 | 饮品/调味品/化妆品精华液 |
-| PET 瓶 + 收缩套标 | 饮料/日化/洗护 |
-| 亚克力瓶 + 丝印/烫金 | 高端护肤/香水 |
-| HDPE/PP 瓶 + 模内标 | 日化/沐浴露/洗发水 |
-| 铝瓶 + 喷涂+丝印 | 高端喷雾/香水/功能饮料 |
-| 陶瓷瓶 + 烤花 | 高端白酒/工艺品 |
-
-### 软包装
-| 类型 | 说明 |
-|---|---|
-| 自立袋 / Doypack | 底部折叠可站立，咖啡/茶叶/坚果/宠粮 |
-| 三边封袋 | 三边热封，扁平袋，调料/面膜/试用装 |
-| 八边封袋 / Quad-seal | 平底+侧面风琴，货架陈列，高端咖啡/茶叶 |
-| 拉链袋 | 顶部拉链封口，可重复开合，零食/日化补充装 |
-| 吸嘴袋 / Spout Pouch | 自立袋+吸嘴+盖，液体/膏体，果汁/洗衣液 |
-| 纸巾软包装 | PE 膜枕式包装，手帕纸/湿巾 |
-| 卫生用品枕式包装 | PE 膜，卫生巾/尿不湿外包装 |
-
-## 支持的材质与工艺
-
-### 盒型/纸类工艺
-| 材质/工艺 | 视觉效果 |
-|---|---|
-| 镭射银卡纸 | 全息彩虹光泽银色金属底色 |
-| 逆向 UV | 大面积哑光 + 局部亮光 UV 对比 |
-| 局部露银 | 露出银卡纸底色形成金属细节 |
-| 局部 UV / 触感 UV | 透明高光清漆，角度依赖反光 |
-| 烫金 / 烫银 | 金属光泽，克制反射 |
-| 击凸 / 压凹 | 微凸起/凹陷 + 边缘光影 |
-| 珠光特种纸 | 珠光微粒纹理，角度变换光泽 |
-| 触感膜 | 天鹅绒般哑面触感 |
-| 银龙 PET | 银色拉丝/镜面 PET 薄膜 |
-
-### 瓶器工艺
-| 材质/工艺 | 视觉效果 |
-|---|---|
-| 哑光/亮光/手感漆喷涂 | 均匀色覆盖瓶身 |
-| 电镀/真空镀 | 镜面金属光泽 |
-| 蒙砂/磨砂 | 半透明雾面，玻璃专用 |
-| 瓶身丝印 | 油墨直接印曲面 |
-| 瓶身烫金/烫银 | 曲面金属箔热压转印 |
-| 烤花/贴花 | 高温烧结图案融入釉面 |
-
-### 软包装工艺
-| 材质/工艺 | 视觉效果 |
-|---|---|
-| 镭射膜/全息膜 | 基膜自带彩虹光泽 |
-| 铝箔复合膜 | 不透明银白金属底，高阻隔 |
-| 镀铝复合膜 | 银色金属光泽，比铝箔柔韧 |
-| MATT OPP 哑面膜 | 柔和哑面雾感 |
-| 牛皮纸复合膜 | 纸纤维纹理+PE防潮 |
-| 哑油/亮油对比 | 哑面+局部亮光层次 |
-| 拉链封口 | 凹凸扣或滑块 |
-| 吸嘴+盖 | 自立袋顶部焊接 |
-| 易撕口 | V型缺口或激光划线 |
-
-## 输出
-
-生成的效果图保存在用户指定的目录（默认同目录下的 `工艺效果图/`），文件命名格式：
-
-```
-产品名_盒型_材质工艺_v1.png
+result = run_packaging_request(
+    {
+        "action": "health_check",
+        "request_id": "python-example",
+        "parameters": {},
+    }
+)
+print(result.to_dict())
 ```
 
-同时输出 CMF 方案文档（材质方案、工艺分布表、印前注意事项）。
+## 安全与精度边界
 
-## 限制
+- 结构输出默认是 `DESIGN_TEMPLATE`，用于设计、排版、效果图和结构沟通。
+- 未经印厂确认，不得称为可直接生产或无需复核。
+- 切线、压痕、出血、安全区、糊口、纸厚补偿和模切公差必须分别验证。
+- CMF 效果图不能替代打样和正式印刷文件。
+- 本地代码只做解析、校验、记录和文件管理，不用 Pillow、OpenCV、ImageMagick、FFmpeg 或本地滤镜伪造 CMF。
+- 法规和合规内容是辅助建议，必须由有资质人员和实际来源复核。
+- 未实现的能力返回 `NOT_IMPLEMENTED`，不会用自由生成结果冒充确定性工具。
 
-- 中文文字在 AI 图生图中可能出现轻微变形（通过面板拆解策略最大限度缓解）
-- 效果图为视觉提案用途，不能替代印刷生产文件
-- 严格的 1:1 生产打样仍需 3D mockup 软件或实际打样确认
+## 测试
 
-## 依赖
+```bash
+python3 -m unittest discover -v
+python3 -m compileall -q src scripts tests
+.venv/bin/python evals/run_evals.py
+.venv/bin/python examples/full-workflow/run_demo.py --output output/full-workflow-demo
+```
 
-- Python 3（cairosvg、opencv-python、numpy）— 仅用于 SVG 渲染和面板拆分
-- Codex CLI 或 Claude Code — 用于 AI 图像生成
-- cairo 库 — macOS:`brew install cairo`
-
-## 许可
-
-MIT
+当前共有 53 项自动化测试和 12 个 Evals。架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，Evals 见 [reports/PHASE5_EVALS_REPORT.md](reports/PHASE5_EVALS_REPORT.md)，总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。

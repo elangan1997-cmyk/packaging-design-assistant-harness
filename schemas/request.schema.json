@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/packaging-assistant/request.schema.json",
+  "title": "Packaging Assistant Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "parameters"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "structure_template",
+        "content_layout",
+        "mockup_render",
+        "inspect",
+        "route",
+        "validate",
+        "health_check"
+      ]
+    },
+    "request_id": {"type": "string"},
+    "parameters": {"type": "object"}
+  }
+}
+

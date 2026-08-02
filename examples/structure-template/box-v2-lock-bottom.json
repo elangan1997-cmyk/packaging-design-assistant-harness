@@ -1,0 +1,16 @@
+{
+  "model_code": "carton.box_v2.lock_bottom",
+  "dimensions": {
+    "length": 100,
+    "width": 55,
+    "height": 160,
+    "unit": "mm",
+    "dimension_type": "finished_outer"
+  },
+  "shrink": 0.7,
+  "tuck_height": 15,
+  "glue_width": 14,
+  "bleed": 3,
+  "safe_margin": 3,
+  "output_mode": "DESIGN_TEMPLATE"
+}

@@ -1,0 +1,1 @@
+"""Packaging Assistant test suite."""
