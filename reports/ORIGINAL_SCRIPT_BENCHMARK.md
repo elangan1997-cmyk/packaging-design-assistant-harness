@@ -19,7 +19,7 @@ The original dialog exposes ten distinct radio-button models. They are represent
 | 同向盖 | `carton.box_v2.same_direction_tuck` | registered, not implemented |
 | 粘底盒 | `carton.box_v2.glue_bottom` | registered, not implemented |
 | 挂耳盒 | `carton.box_v2.hang_tab` | registered, not implemented |
-| 手提盒 | `carton.box_v2.carry_handle` | registered, not implemented |
+| 手提盒 | `carton.box_v2.carry_handle` | implemented and regression-tested |
 | 纸箱 | `carton.box_v2.shipping_carton` | registered, not implemented |
 | 其它 | `carton.box_v2.custom` | registered, not implemented |
 
@@ -39,31 +39,31 @@ All models share these visible fields in the original dialog:
 
 The dialog identifies itself as version `2nd version`, dated `2012.5.1`, author `guise4543`.
 
-## Regression samples
+## Active regression samples
 
-| Sample | L × W × H | Shrink | Tuck | Glue | Original output |
+The acceptance rule is one original Illustrator fixture per box model.
+
+| Model | L × W × H | Shrink | Tuck | Glue | Original output |
 |---|---|---:|---:|---:|---|
-| A | 80 × 40 × 120 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
-| B | 100 × 55 × 160 mm | 0.7 | 15 | 14 | raw Illustrator SVG fixture |
+| 锁底盒 | 80 × 40 × 120 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
+| 手提盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
 
-Sample B intentionally changes every dimensional parameter and uses a taller, wider structure to catch hard-coded coordinates.
+The previously captured 100 × 55 × 160 mm lock-bottom SVG remains historical evidence but is not part of the active one-sample-per-model matrix.
 
 ## Comparison method and result
 
 The test parser:
 
-1. selects the documented top-level result group from each raw Illustrator SVG;
+1. selects the documented result group and normalizes artboard translation where needed;
 2. separates the original red crease group and black cut group;
 3. removes only empty Illustrator placeholder paths;
 4. converts Illustrator points using `72 / 25.4` points per millimetre;
 5. compares element kind, path command topology, element sequence, value count, and every coordinate against the newly generated SVG.
 
-Both samples pass at `0.001 mm` coordinate precision:
+Both active model samples pass at `0.001 mm` coordinate precision:
 
-- 7 non-empty crease primitives match;
-- 16 non-empty cut primitives match;
-- all three curved path command sequences match;
-- variable tuck arch, dust flaps, bottom locking tabs, and 15-degree glue tab all match.
+- 锁底盒: 7 non-empty crease primitives and 16 cut primitives match;
+- 手提盒: 8 non-empty crease primitives and 18 cut primitives match;
+- hand apertures, side slots, dust flaps, bottom locking tabs, and 15-degree glue tabs are included.
 
-This is a geometry regression claim for the two tested samples, not a production-readiness claim. Every generated file remains `DESIGN_TEMPLATE` and carries `REQUIRES_MANUFACTURER_REVIEW`.
-
+This is a geometry regression claim for the tested samples, not a production-readiness claim. Every generated file remains `DESIGN_TEMPLATE` and carries `REQUIRES_MANUFACTURER_REVIEW`.

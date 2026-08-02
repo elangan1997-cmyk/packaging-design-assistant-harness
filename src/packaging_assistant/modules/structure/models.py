@@ -74,7 +74,7 @@ class StructureSpec:
     bleed: float = 3.0
     safe_margin: float = 3.0
     output_mode: str = "DESIGN_TEMPLATE"
-    model_version: str = "box-v2.0-lock-bottom-1.0"
+    model_version: str = "box-v2.0-1.0"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "StructureSpec":
@@ -106,6 +106,7 @@ class StructureSpec:
             bleed=values["bleed"],
             safe_margin=values["safe_margin"],
             output_mode=str(data.get("output_mode", "DESIGN_TEMPLATE")),
+            model_version=str(data.get("model_version", "box-v2.0-1.0")),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -144,4 +145,3 @@ class StructureGeneration:
     validation: dict[str, Any]
     svg: str
     geometry: StructureGeometry
-

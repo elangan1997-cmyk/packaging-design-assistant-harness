@@ -10,7 +10,8 @@
 - JSON Schemas, examples, health check, installation scripts, and standard-library tests.
 - Ten independent Box 2.0 structure model registrations.
 - Deterministic `carton.box_v2.lock_bottom` SVG generator with stable Illustrator layers and IDs.
-- Two original-Illustrator SVG regression fixtures and geometry comparison at 0.001 mm precision.
+- Deterministic `carton.box_v2.carry_handle` generator, including two handle apertures and two side slots.
+- One active original-Illustrator regression sample per implemented box model, compared at 0.001 mm precision.
 - Model-specific structure capability discovery and three-file structure job output.
 
 ### Changed

@@ -21,7 +21,7 @@ MODELS: tuple[StructureModel, ...] = (
     ),
     StructureModel("carton.box_v2.glue_bottom", "粘底盒", ("粘底盒", "粘底", "glue bottom"), False),
     StructureModel("carton.box_v2.hang_tab", "挂耳盒", ("挂耳盒", "挂耳", "hang tab"), False),
-    StructureModel("carton.box_v2.carry_handle", "手提盒", ("手提盒", "手提袋 pro", "carry handle"), False),
+    StructureModel("carton.box_v2.carry_handle", "手提盒", ("手提盒", "carry handle"), True),
     StructureModel("carton.box_v2.shipping_carton", "纸箱", ("纸箱", "shipping carton"), False),
     StructureModel("carton.box_v2.custom", "其它", ("其它", "其他", "custom"), False),
 )
@@ -52,4 +52,3 @@ def model_report() -> list[dict[str, object]]:
         }
         for model in MODELS
     ]
-

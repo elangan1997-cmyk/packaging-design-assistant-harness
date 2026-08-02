@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.2.0` 已完成 Phase 1 架构底座和首个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 可直接生成 SVG；其余九个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
+当前 `0.3.0` 已完成 Phase 1 架构底座，以及两个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
 
 ## 自然语言使用
 
@@ -16,6 +16,12 @@
 
 ```text
 做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模模板。
+```
+
+也可以说：
+
+```text
+做一个手提盒，100 × 60 × 160 mm，生成 SVG 刀模模板。
 ```
 
 或：
@@ -56,14 +62,16 @@ Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通
 
 ### 已识别的盒型2.0模型
 
-`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`、`其它` 已拆成十个模型 ID。当前只有 `carton.box_v2.lock_bottom` 完成原脚本回归验证，其余模型返回模型级 `NOT_IMPLEMENTED`。
+`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`、`其它` 已拆成十个模型 ID。当前 `carton.box_v2.lock_bottom` 与 `carton.box_v2.carry_handle` 已完成原脚本回归验证，其余模型返回模型级 `NOT_IMPLEMENTED`。验收策略为每个盒型使用一份原脚本 SVG fixture。
 
-锁底盒参数示例见 `examples/structure-template/box-v2-lock-bottom.json`：
+参数示例见 `examples/structure-template/box-v2-lock-bottom.json` 和 `examples/structure-template/box-v2-carry-handle.json`：
 
 ```bash
 packaging-assistant --output output/ structure \
   --spec examples/structure-template/box-v2-lock-bottom.json
 ```
+
+注意：盒型2.0 的“手提盒”是折叠纸盒结构，不等同于独立 F5“手提袋 Pro”纸袋结构。
 
 ## CLI
 
@@ -111,4 +119,4 @@ python3 -m unittest discover -v
 python3 -m compileall -q src scripts tests
 ```
 
-架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，原脚本对比见 [reports/ORIGINAL_SCRIPT_BENCHMARK.md](reports/ORIGINAL_SCRIPT_BENCHMARK.md)。
+架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，手提盒实现见 [reports/PHASE3_CARRY_HANDLE_REPORT.md](reports/PHASE3_CARRY_HANDLE_REPORT.md)，原脚本对比见 [reports/ORIGINAL_SCRIPT_BENCHMARK.md](reports/ORIGINAL_SCRIPT_BENCHMARK.md)。

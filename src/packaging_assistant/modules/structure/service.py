@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from packaging_assistant.exceptions import NotImplementedCapabilityError, RequestValidationError
+from packaging_assistant.modules.structure.carry_handle import build_carry_handle
 from packaging_assistant.modules.structure.lock_bottom import build_lock_bottom
 from packaging_assistant.modules.structure.models import StructureGeneration, StructureSpec
 from packaging_assistant.modules.structure.registry import resolve_model
@@ -25,6 +26,10 @@ def generate_structure_template(parameters: dict[str, Any]) -> StructureGenerati
         )
     canonical_parameters = dict(parameters)
     canonical_parameters["model_code"] = model.code
+    canonical_parameters["model_version"] = {
+        "carton.box_v2.lock_bottom": "box-v2.0-lock-bottom-1.0",
+        "carton.box_v2.carry_handle": "box-v2.0-carry-handle-1.0",
+    }[model.code]
     spec = StructureSpec.from_dict(canonical_parameters)
     if spec.output_mode != "DESIGN_TEMPLATE":
         raise RequestValidationError(
@@ -32,8 +37,12 @@ def generate_structure_template(parameters: dict[str, Any]) -> StructureGenerati
             "当前结构模块只输出 DESIGN_TEMPLATE。",
             {"supported_modes": ["DESIGN_TEMPLATE"]},
         )
-    geometry = build_lock_bottom(spec)
-    svg = render_svg(spec, geometry)
+    builders = {
+        "carton.box_v2.lock_bottom": build_lock_bottom,
+        "carton.box_v2.carry_handle": build_carry_handle,
+    }
+    geometry = builders[model.code](spec)
+    svg = render_svg(spec, geometry, model.name_zh)
     warnings = ["REQUIRES_MANUFACTURER_REVIEW"]
     if spec.dimensions.dimension_type == "unspecified":
         warnings.append("DIMENSION_TYPE_UNSPECIFIED")
@@ -61,7 +70,7 @@ def generate_structure_template(parameters: dict[str, Any]) -> StructureGenerati
         {
             "schema_version": "1.0",
             "name_zh": model.name_zh,
-            "source_compatibility": "AI脚本插件146合集 / 盒型2.0 / 锁底盒 black-box regression",
+            "source_compatibility": f"AI脚本插件146合集 / 盒型2.0 / {model.name_zh} black-box regression",
         }
     )
     return StructureGeneration(spec=spec_payload, validation=validation, svg=svg, geometry=geometry)
@@ -81,4 +90,3 @@ def write_structure_outputs(generation: StructureGeneration, directory: str | Pa
         encoding="utf-8",
     )
     return [svg_path, spec_path, validation_path]
-

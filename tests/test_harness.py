@@ -62,6 +62,54 @@ def _original_group_primitives(path: Path, group_index: int) -> tuple[list[tuple
     return parse(crease_group), parse(cut_group)
 
 
+def _translated_path_values(commands: tuple[str, ...], values: list[float], dx: float, dy: float) -> list[float]:
+    sizes = {"M": 2, "L": 2, "C": 6, "H": 1, "c": 6, "h": 1, "l": 2, "v": 1, "z": 0}
+    translated: list[float] = []
+    index = 0
+    for command in commands:
+        size = sizes[command]
+        current = values[index:index + size]
+        if command in {"M", "L", "C"}:
+            for pair_index in range(0, size, 2):
+                current[pair_index] += dx
+                current[pair_index + 1] += dy
+        elif command == "H":
+            current[0] += dx
+        translated.extend(current)
+        index += size
+    return translated
+
+
+def _original_carry_primitives(path: Path, baseline_y: float) -> tuple[list[tuple], list[tuple]]:
+    root = ET.parse(path).getroot()
+    group = root.findall(f"{SVG_NS}g")[1]
+
+    def parse(items: list[ET.Element]) -> list[tuple]:
+        result: list[tuple] = []
+        for item in items:
+            kind = _tag(item)
+            if kind == "path" and not item.attrib.get("d", "").strip():
+                continue
+            if kind == "line":
+                values = [float(item.attrib[key]) / PT_PER_MM for key in ("x1", "y1", "x2", "y2")]
+                values[1] -= baseline_y
+                values[3] -= baseline_y
+                result.append((kind, (), values))
+            elif kind == "polyline":
+                values = [value / PT_PER_MM for value in _numbers(item.attrib["points"])]
+                for index in range(1, len(values), 2):
+                    values[index] -= baseline_y
+                result.append((kind, (), values))
+            elif kind == "path":
+                commands = tuple(re.findall(r"[A-Za-z]", item.attrib["d"]))
+                values = [value / PT_PER_MM for value in _numbers(item.attrib["d"])]
+                result.append((kind, commands, _translated_path_values(commands, values, 0, -baseline_y)))
+        return result
+
+    children = list(group)
+    return parse(list(children[0])), parse(list(children[1]) + children[2:])
+
+
 def _generated_primitives(svg: str, layer_id: str) -> list[tuple]:
     root = ET.fromstring(svg)
     layer = next(item for item in root.findall(f"{SVG_NS}g") if item.attrib.get("id") == layer_id)
@@ -133,7 +181,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(len(models), 10)
         self.assertEqual(len({item["code"] for item in models}), 10)
         implemented = [item["name_zh"] for item in models if item["implemented"]]
-        self.assertEqual(implemented, ["锁底盒"])
+        self.assertEqual(implemented, ["锁底盒", "手提盒"])
 
     def test_lock_bottom_structure_job_writes_three_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -192,18 +240,18 @@ class HarnessContractTests(unittest.TestCase):
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease)
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut)
 
-    def test_lock_bottom_matches_original_script_at_100x55x160(self) -> None:
+    def test_carry_handle_matches_original_script_at_100x60x160(self) -> None:
         generated = generate_structure_template(
             {
-                "model_code": "carton.box_v2.lock_bottom",
-                "dimensions": {"length": 100, "width": 55, "height": 160, "unit": "mm"},
-                "shrink": 0.7,
-                "tuck_height": 15,
-                "glue_width": 14,
+                "model_code": "手提盒",
+                "dimensions": {"length": 100, "width": 60, "height": 160, "unit": "mm"},
+                "shrink": 0.5,
+                "tuck_height": 12,
+                "glue_width": 11,
             }
         )
-        original_crease, original_cut = _original_group_primitives(
-            ROOT / "tests/fixtures/original-script/box-v2-lock-bottom-100x55x160.svg", 3
+        original_crease, original_cut = _original_carry_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-carry-handle-100x60x160.svg", 297.0
         )
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease)
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut)

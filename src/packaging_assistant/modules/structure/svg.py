@@ -35,7 +35,7 @@ def _points(values: tuple[float, ...]) -> str:
 def _path_d(primitive: Primitive) -> str:
     values = iter(primitive.values)
     chunks: list[str] = []
-    sizes = {"M": 2, "c": 6, "h": 1}
+    sizes = {"M": 2, "L": 2, "C": 6, "H": 1, "c": 6, "h": 1, "l": 2, "v": 1, "z": 0}
     for command in primitive.commands:
         size = sizes[command]
         numbers = [_n(next(values)) for _ in range(size)]
@@ -60,7 +60,7 @@ def _layer(layer_id: str, content: Iterable[str] = ()) -> str:
     return f'  <g id="{layer_id}" inkscape:groupmode="layer" inkscape:label="{layer_id}" />'
 
 
-def render_svg(spec: StructureSpec, geometry: StructureGeometry) -> str:
+def render_svg(spec: StructureSpec, geometry: StructureGeometry, model_name: str) -> str:
     min_x, min_y, max_x, max_y = geometry.bounds
     margin = max(5.0, spec.bleed + 2.0)
     view_x = min_x - margin
@@ -107,7 +107,7 @@ def render_svg(spec: StructureSpec, geometry: StructureGeometry) -> str:
     metadata_text = html.escape(json.dumps(metadata, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="{_n(view_w)}mm" height="{_n(view_h)}mm" viewBox="{_n(view_x)} {_n(view_y)} {_n(view_w)} {_n(view_h)}">
-  <title>Box 2.0 锁底盒结构设计模板</title>
+  <title>Box 2.0 {html.escape(model_name)}结构设计模板</title>
   <metadata id="PACKAGING_STRUCTURE_METADATA">{metadata_text}</metadata>
   <style>
     .cut {{ fill: none; stroke: #000000; stroke-width: 0.1; vector-effect: non-scaling-stroke; }}
@@ -119,4 +119,3 @@ def render_svg(spec: StructureSpec, geometry: StructureGeometry) -> str:
 {layers}
 </svg>
 '''
-
