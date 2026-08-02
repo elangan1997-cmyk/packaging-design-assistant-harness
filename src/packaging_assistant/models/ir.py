@@ -31,6 +31,40 @@ class PackagingAsset:
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class PanelDefinition:
+    panel_id: str
+    role: str
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+@dataclass(frozen=True)
+class ContentSource:
+    type: str
+    reference: str = ""
+
+
+@dataclass(frozen=True)
+class ContentField:
+    field_id: str
+    field_type: str
+    value: str
+    status: str
+    source: ContentSource
+    panel: str
+
+
+@dataclass(frozen=True)
+class PackagingContentSpec:
+    jurisdiction: str
+    product_category: str
+    fields: tuple[ContentField, ...]
+    schema_version: str = "1.0"
+
+
 @dataclass
 class PackagingRequest:
     action: str

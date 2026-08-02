@@ -148,11 +148,11 @@ def build_carry_handle(spec: StructureSpec) -> StructureGeometry:
     )
 
     panels = (
-        Panel("PANEL_FRONT", "正面", x0, top, length, height),
-        Panel("PANEL_SIDE_LEFT", "侧面 A", x1, top, width, height),
-        Panel("PANEL_BACK", "背面", x2, top, length, height),
-        Panel("PANEL_SIDE_RIGHT", "侧面 B", x3, top, width - shrink, height),
-        Panel("PANEL_GLUE", "糊口", -glue, top + glue_angle, glue, height - 2 * glue_angle),
+        Panel("panel-front", "正面", x0, top, length, height),
+        Panel("panel-left", "侧面 A", x1, top, width, height),
+        Panel("panel-back", "背面", x2, top, length, height),
+        Panel("panel-right", "侧面 B", x3, top, width - shrink, height),
+        Panel("panel-glue", "糊口", -glue, top + glue_angle, glue, height - 2 * glue_angle),
     )
     min_y = top - width
     max_y = max(quarter3, quarter3 - 5 + 5)

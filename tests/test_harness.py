@@ -14,7 +14,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from packaging_assistant.api import inspect_packaging_asset, run_packaging_request
+from packaging_assistant.api import generate_content_layout, inspect_packaging_asset, run_packaging_request
 from packaging_assistant.capabilities import capability_report
 from packaging_assistant.modules.mockup import LegacyCMFAdapter
 from packaging_assistant.modules.structure import (
@@ -136,6 +136,27 @@ def _assert_primitives_equal(test: unittest.TestCase, actual: list[tuple], expec
             test.assertAlmostEqual(left, right, places=3, msg=f"primitive {index} value {number_index}")
 
 
+def _write_blank_template(directory: Path) -> Path:
+    generated = generate_structure_template(
+        {
+            "model_code": "锁底盒",
+            "dimensions": {"length": 80, "width": 40, "height": 120, "unit": "mm"},
+            "shrink": 0.5,
+            "tuck_height": 12,
+            "glue_width": 11,
+        }
+    )
+    path = directory / "template.svg"
+    path.write_text(generated.svg, encoding="utf-8")
+    return path
+
+
+def _layer_fingerprint(svg: str, layer_id: str) -> str:
+    root = ET.fromstring(svg)
+    layer = next(item for item in root.iter() if item.attrib.get("id") == layer_id)
+    return ET.tostring(layer, encoding="unicode")
+
+
 class HarnessContractTests(unittest.TestCase):
     def test_health_check(self) -> None:
         result = run_packaging_request({"action": "health_check", "parameters": {}})
@@ -245,6 +266,8 @@ class HarnessContractTests(unittest.TestCase):
         root = ET.fromstring(first.svg)
         layer_ids = {item.attrib.get("id") for item in root.findall(f"{SVG_NS}g")}
         self.assertTrue({"LAYER_CUT", "LAYER_CREASE", "LAYER_BLEED", "LAYER_SAFE", "LAYER_CONTENT_GUIDES"}.issubset(layer_ids))
+        all_ids = {item.attrib.get("id") for item in root.iter()}
+        self.assertTrue({"panel-front", "panel-back", "panel-left", "panel-right", "panel-glue"}.issubset(all_ids))
         self.assertIn("REQUIRES_MANUFACTURER_REVIEW", first.svg)
         self.assertEqual(first.validation["counts"]["cut_primitives"], 16)
         self.assertEqual(first.validation["counts"]["crease_primitives"], 7)
@@ -311,6 +334,132 @@ class HarnessContractTests(unittest.TestCase):
             self.assertTrue(asset.metadata["has_dieline"])
             self.assertTrue(asset.metadata["has_structure_metadata"])
 
+    def test_blank_structure_asset_is_classified_for_content_layout(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = _write_blank_template(Path(tmp))
+            asset = inspect_packaging_asset(template)
+            self.assertEqual(asset.role, "blank_structure_template")
+            self.assertTrue(asset.metadata["is_blank_dieline"])
+            self.assertTrue(asset.metadata["has_panel_ids"])
+            self.assertFalse(asset.metadata["has_artwork"])
+
+    def test_content_layout_uses_placeholders_and_never_invents_regulated_facts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = _write_blank_template(Path(tmp))
+            generation = generate_content_layout(
+                {
+                    "template": str(template),
+                    "brief": {
+                        "jurisdiction": "CN",
+                        "product_category": "aquarium_product",
+                        "brand": {"name": "JUST CLEAN"},
+                        "product": {"name": "观赏鱼专用盐", "net_content": "500g"},
+                    },
+                }
+            )
+            fields = {field.field_id: field for field in generation.spec.fields}
+            self.assertEqual(fields["field-brand-name"].status, "user_provided")
+            self.assertEqual(fields["field-brand-name"].source.type, "user_input")
+            self.assertEqual(fields["field-manufacturer"].value, "[待提供：生产企业名称]")
+            self.assertEqual(fields["field-manufacturer"].status, "missing")
+            self.assertEqual(fields["field-license-number"].value, "[待确认：许可证编号]")
+            self.assertEqual(fields["field-execution-standard"].value, "[待确认：执行标准]")
+            self.assertNotIn("有限公司", generation.svg)
+
+    def test_content_layout_preserves_structure_layers_and_safe_panels(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = _write_blank_template(Path(tmp))
+            original = template.read_text(encoding="utf-8")
+            generation = generate_content_layout(
+                {
+                    "template": str(template),
+                    "brief": {
+                        "jurisdiction": "CN",
+                        "brand": {"name": "JUST CLEAN"},
+                        "product": {"name": "观赏鱼专用盐", "net_content": "500g"},
+                    },
+                }
+            )
+            ET.fromstring(generation.svg)
+            for layer_id in ("LAYER_CUT", "LAYER_CREASE", "LAYER_BLEED", "LAYER_SAFE"):
+                self.assertEqual(_layer_fingerprint(original, layer_id), _layer_fingerprint(generation.svg, layer_id))
+            self.assertTrue(generation.validation["checks"]["protected_layers_unchanged"])
+            self.assertTrue(generation.validation["checks"]["all_fields_within_safe_area"])
+            self.assertTrue(generation.validation["checks"]["no_fields_in_glue_panel"])
+            ids = [item.attrib["id"] for item in ET.fromstring(generation.svg).iter() if "id" in item.attrib]
+            self.assertEqual(len(ids), len(set(ids)))
+            self.assertTrue(all(field.panel != "panel-glue" for field in generation.spec.fields))
+
+    def test_content_layout_job_writes_required_five_outputs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            template = _write_blank_template(root)
+            result = run_packaging_request(
+                {
+                    "action": "content_layout",
+                    "request_id": "content-test",
+                    "parameters": {
+                        "template": str(template),
+                        "brief": {
+                            "jurisdiction": "CN",
+                            "product_category": "aquarium_product",
+                            "brand": {"name": "JUST CLEAN"},
+                            "product": {"name": "观赏鱼专用盐", "net_content": "500g"},
+                        },
+                    },
+                },
+                root / "jobs",
+            )
+            self.assertTrue(result.success)
+            self.assertEqual(result.status, "completed")
+            self.assertEqual(
+                {Path(item["path"]).name for item in result.outputs},
+                {"content-layout.svg", "content-spec.json", "source-report.md", "missing-fields.md", "review-checklist.md"},
+            )
+            job_dir = root / "jobs" / result.job_id
+            self.assertTrue((job_dir / "job.json").is_file())
+            self.assertIn("未执行外部法规检索", (job_dir / "source-report.md").read_text(encoding="utf-8"))
+            self.assertIn("待提供", (job_dir / "missing-fields.md").read_text(encoding="utf-8"))
+
+    def test_content_cli_executes_real_module_b(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            template = _write_blank_template(root)
+            brief = root / "brief.json"
+            brief.write_text(
+                json.dumps(
+                    {
+                        "jurisdiction": "CN",
+                        "brand": {"name": "JUST CLEAN"},
+                        "product": {"name": "观赏鱼专用盐", "net_content": "500g"},
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "packaging_assistant.cli",
+                    "--output",
+                    str(root / "cli-output"),
+                    "content",
+                    "--template",
+                    str(template),
+                    "--brief",
+                    str(brief),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            payload = json.loads(completed.stdout)
+            self.assertEqual(completed.returncode, 0)
+            self.assertTrue(payload["success"])
+            self.assertEqual(payload["action"], "content_layout")
+
     def test_json_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "valid.json"
@@ -334,7 +483,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertTrue(report["actions"]["health_check"]["implemented"])
         self.assertTrue(report["actions"]["structure_template"]["implemented"])
         self.assertEqual(len(report["structure_models"]), 10)
-        self.assertFalse(report["actions"]["content_layout"]["implemented"])
+        self.assertTrue(report["actions"]["content_layout"]["implemented"])
         self.assertFalse(report["actions"]["mockup_render"]["implemented"])
 
     def test_mock_provider_has_no_external_effect(self) -> None:

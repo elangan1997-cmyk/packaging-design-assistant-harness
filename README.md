@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.3.1` 已完成 Phase 1 架构底座，以及两个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
+当前 `0.4.0` 已完成架构底座、两个经原脚本回归验证的 Module A 盒型，以及 Module B 的首个确定性内容编排闭环。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；Module B 可将用户资料和缺失占位符安全写入这些模板。其余八个盒型与 Module C 图片生成仍如实返回 `not_implemented`。原有 CMF 参考资料完整保留。
 
 ## 自然语言使用
 
@@ -27,7 +27,7 @@
 或：
 
 ```text
-这是完成稿。哑银卡纸，Logo 烫黑金，产品名击凸，给我 CMF 建议和效果图工作流。
+这是空白刀模和产品资料。把包装字段整理到正面、背面和侧面，不要改刀线。
 ```
 
 Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通用户不必手动运行命令。
@@ -75,6 +75,24 @@ packaging-assistant --output output/ structure \
 
 注意：盒型2.0 的“手提盒”是折叠纸盒结构，不等同于独立 F5“手提袋 Pro”纸袋结构。
 
+### Module B 内容编排
+
+Module B 接收 Harness 生成的空白 SVG 模板和 JSON 产品资料，输出：
+
+- `content-layout.svg`
+- `content-spec.json`
+- `source-report.md`
+- `missing-fields.md`
+- `review-checklist.md`
+
+它只写入 `LAYER_ARTWORK`，不会修改切线、压痕、出血和安全区图层。企业、地址、许可证、标准号、认证、成分和功效等缺失信息使用明确占位符，不会自动编造。当前版本不自动执行法规搜索，所有字段仍需人工复核。
+
+```bash
+packaging-assistant --output output/ content \
+  --template output/template.svg \
+  --brief examples/content-layout/aquarium-salt-brief.json
+```
+
 ## CLI
 
 ```bash
@@ -121,4 +139,4 @@ python3 -m unittest discover -v
 python3 -m compileall -q src scripts tests
 ```
 
-架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，手提盒实现见 [reports/PHASE3_CARRY_HANDLE_REPORT.md](reports/PHASE3_CARRY_HANDLE_REPORT.md)，原脚本对比见 [reports/ORIGINAL_SCRIPT_BENCHMARK.md](reports/ORIGINAL_SCRIPT_BENCHMARK.md)。
+架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，当前总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。

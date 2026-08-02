@@ -39,10 +39,16 @@ ACTIONS: dict[str, dict[str, Any]] = {
     },
     "content_layout": {
         "module": "content",
-        "implemented": False,
-        "outputs": ["content_layout.svg", "content_spec.json", "review_report.json"],
+        "implemented": True,
+        "outputs": [
+            "content-layout.svg",
+            "content-spec.json",
+            "source-report.md",
+            "missing-fields.md",
+            "review-checklist.md",
+        ],
         "providers": [],
-        "note": "Module B is not implemented in Phase 1.",
+        "note": "Deterministic sourced-field placement; external compliance research is not automatic.",
     },
     "mockup_render": {
         "module": "mockup",

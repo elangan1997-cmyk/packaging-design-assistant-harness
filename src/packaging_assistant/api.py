@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from packaging_assistant.models import PackagingAsset, PackagingRequest, PackagingResult
+from packaging_assistant.modules.content import generate_content_layout
 from packaging_assistant.orchestrator import run_request
 from packaging_assistant.parsers import inspect_asset
 from packaging_assistant.modules.structure import generate_structure_template
@@ -23,4 +24,9 @@ def inspect_packaging_asset(path: str | Path) -> PackagingAsset:
     return inspect_asset(path)
 
 
-__all__ = ["generate_structure_template", "inspect_packaging_asset", "run_packaging_request"]
+__all__ = [
+    "generate_content_layout",
+    "generate_structure_template",
+    "inspect_packaging_asset",
+    "run_packaging_request",
+]

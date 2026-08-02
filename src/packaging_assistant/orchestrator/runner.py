@@ -10,6 +10,7 @@ from typing import Any
 from packaging_assistant.capabilities import capability_report
 from packaging_assistant.exceptions import PackagingAssistantError, RequestValidationError
 from packaging_assistant.models import PackagingJob, PackagingRequest, PackagingResult
+from packaging_assistant.modules.content import generate_content_layout, write_content_outputs
 from packaging_assistant.modules.structure import generate_structure_template, write_structure_outputs
 from packaging_assistant.parsers import inspect_asset
 from packaging_assistant.routing import route_request
@@ -115,6 +116,55 @@ def run_request(
                 paths = write_structure_outputs(generation, workspace.path)
                 outputs = [
                     {"type": "svg" if path.suffix == ".svg" else "json", "path": str(path)}
+                    for path in paths
+                ]
+                job.outputs.extend(outputs)
+                workspace.write_manifest()
+                job_id = job.job_id
+            return PackagingResult(
+                success=True,
+                action=request.action,
+                request_id=request.request_id,
+                status="completed",
+                job_id=job_id,
+                outputs=outputs,
+                warnings=warnings,
+                manual_review_required=True,
+                route=route_payload,
+            )
+
+        if request.action == "content_layout" and route.implemented:
+            generation = generate_content_layout(request.parameters)
+            warnings = list(generation.validation["warnings"])
+            if output_dir is None:
+                outputs = [
+                    {"type": "svg", "name": "content-layout.svg", "inline": generation.svg},
+                    {"type": "json", "name": "content-spec.json", "inline": asdict(generation.spec)},
+                    {"type": "markdown", "name": "source-report.md", "inline": generation.source_report},
+                    {"type": "markdown", "name": "missing-fields.md", "inline": generation.missing_fields_report},
+                    {"type": "markdown", "name": "review-checklist.md", "inline": generation.review_checklist},
+                ]
+                job_id = ""
+            else:
+                from packaging_assistant.orchestrator.workspace import JobWorkspace
+
+                job = PackagingJob(
+                    workflow=request.action,
+                    request_id=request.request_id,
+                    status="completed",
+                    jurisdiction=generation.spec.jurisdiction,
+                    product_category=generation.spec.product_category,
+                    content=asdict(generation.spec),
+                    warnings=warnings,
+                    manual_review_required=True,
+                )
+                workspace = JobWorkspace(output_dir, job).create()
+                paths = write_content_outputs(generation, workspace.path)
+                outputs = [
+                    {
+                        "type": "svg" if path.suffix == ".svg" else "json" if path.suffix == ".json" else "markdown",
+                        "path": str(path),
+                    }
                     for path in paths
                 ]
                 job.outputs.extend(outputs)

@@ -71,6 +71,8 @@ Module A 至少需要：
 
 Module B 至少需要模板和产品资料。Module C 至少需要完成稿；材质、工艺和重点区域缺失时只做最小追问。
 
+Module B 当前只使用用户资料与占位规则。不得补写企业、许可证、标准号、认证、成分、功效或其他监管事实。缺少资料时保留 `[待提供：…]`、`[待确认：…]` 占位符，并提示人工复核。
+
 ## 工具调用协议
 
 统一请求：
@@ -103,6 +105,20 @@ Module B 至少需要模板和产品资料。Module C 至少需要完成稿；�
   }
 }
 ```
+
+内容编排请求：
+
+```json
+{
+  "action": "content_layout",
+  "parameters": {
+    "template": "/absolute/path/template.svg",
+    "brief": "/absolute/path/product-brief.json"
+  }
+}
+```
+
+Module B 成功时读取全部五个输出，重点检查 `missing-fields.md` 和 `review-checklist.md`。它输出包装信息草稿，不代表法律审核或上市许可。
 
 先运行 Dry Run 可检查：路由、输入、缺失字段、Provider、费用风险、预计输出和人工复核项。Dry Run 不得调用真实付费 API。
 

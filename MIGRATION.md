@@ -12,6 +12,7 @@
 - Executable requests use `scripts/skill_entry.py` and a stable JSON contract.
 - Every task receives an isolated Job Workspace and manifest.
 - Capability status is machine-readable. Documentation is no longer treated as an implemented tool.
+- Module B now writes sourced fields and explicit placeholders into `LAYER_ARTWORK`; it does not modify structural layers or claim automatic legal compliance.
 
 ## Removed or moved
 
@@ -21,4 +22,3 @@
 ## Legacy dielines
 
 The external/local dieline generator is represented by an explicit adapter boundary. It is not silently invoked and no user-specific path is embedded. Model-specific deterministic implementations replace that adapter only after original-output comparison tests pass.
-

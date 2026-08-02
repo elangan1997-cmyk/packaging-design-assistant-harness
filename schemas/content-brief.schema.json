@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/packaging-assistant/content-brief.schema.json",
+  "title": "Packaging Content Brief",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "jurisdiction": {"type": "string"},
+    "product_category": {"type": "string"},
+    "brand": {"type": "object"},
+    "product": {"type": "object"},
+    "business": {"type": "object"},
+    "standards": {"type": "object"}
+  }
+}

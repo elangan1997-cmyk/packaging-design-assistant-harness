@@ -1,9 +1,13 @@
 from .ir import (
     AssetKind,
+    ContentField,
+    ContentSource,
     PackagingAsset,
+    PackagingContentSpec,
     PackagingJob,
     PackagingRequest,
     PackagingResult,
+    PanelDefinition,
     RouteDecision,
     ValidationIssue,
     ValidationReport,
@@ -12,10 +16,14 @@ from .ir import (
 
 __all__ = [
     "AssetKind",
+    "ContentField",
+    "ContentSource",
     "PackagingAsset",
+    "PackagingContentSpec",
     "PackagingJob",
     "PackagingRequest",
     "PackagingResult",
+    "PanelDefinition",
     "RouteDecision",
     "ValidationIssue",
     "ValidationReport",

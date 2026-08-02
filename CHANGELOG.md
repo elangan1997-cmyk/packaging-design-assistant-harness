@@ -14,6 +14,8 @@
 - One active original-Illustrator regression sample per implemented box model, compared at 0.001 mm precision.
 - Conversational box-model choices when `model_code` is missing, with availability status and `needs_input` routing.
 - Model-specific structure capability discovery and three-file structure job output.
+- Module B deterministic content fields with sources, statuses, placeholders, semantic panel assignment, and safe SVG artwork-layer writing.
+- Five-file content-layout output, content schemas, aquarium-product example, and structure-layer integrity checks.
 
 ### Changed
 

@@ -86,10 +86,24 @@ def render_svg(spec: StructureSpec, geometry: StructureGeometry, model_name: str
         "output_mode": spec.output_mode,
         "warning": "REQUIRES_MANUFACTURER_REVIEW",
     }
-    panel_rects = [
-        f'<rect id="{panel.panel_id}" class="panel-guide" x="{_n(panel.x)}" y="{_n(panel.y)}" width="{_n(panel.width)}" height="{_n(panel.height)}" data-panel-name="{html.escape(panel.name)}" />'
-        for panel in geometry.panels
-    ]
+    panel_roles = {
+        "panel-front": "front",
+        "panel-back": "back",
+        "panel-left": "left",
+        "panel-right": "right",
+        "panel-glue": "glue",
+    }
+    panel_rects = []
+    for panel in geometry.panels:
+        panel_type = "glue-flap" if panel.panel_id == "panel-glue" else "artwork-panel"
+        panel_rects.append(
+            f'<rect id="{panel.panel_id}" class="panel-guide" '
+            f'x="{_n(panel.x)}" y="{_n(panel.y)}" '
+            f'width="{_n(panel.width)}" height="{_n(panel.height)}" '
+            f'data-panel-name="{html.escape(panel.name)}" '
+            f'data-role="{panel_roles.get(panel.panel_id, "other")}" '
+            f'data-panel-type="{panel_type}" />'
+        )
     panel_labels = [
         f'<text id="LABEL_{panel.panel_id}" class="panel-label" x="{_n(panel.x + panel.width / 2)}" y="{_n(panel.y + panel.height / 2)}">{html.escape(panel.name)}</text>'
         for panel in geometry.panels
