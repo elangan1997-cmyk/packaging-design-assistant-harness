@@ -2,6 +2,40 @@
 
 这是一个本地优先、对话驱动的包装设计 Harness。普通用户只需要在 Codex、Claude Code 或其他支持 Skill 的 Agent 中说明包装类型、尺寸和任务目标；Agent 负责调用统一 Python 入口，不需要网页、Web Server 或 Node.js。
 
+## 2.0 快速使用说明
+
+安装 Skill 后，直接在 Codex 等对话里说需求即可，不需要安装 Illustrator 脚本，也不需要自己写 SVG。
+
+### 只生成刀模 SVG
+
+直接说盒型、尺寸和输出要求：
+
+```text
+做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模。
+```
+
+支持的盒型包括：直线盒、锁底盒、飞机盒、上盖盒、同向盖、粘底盒、挂耳盒、手提盒和纸箱。
+
+如果只说了尺寸、没有说盒型，Agent 会先列出盒型选项，让你选择后再生成；已经提供的尺寸不会丢失。“其它”盒型目前会明确返回未实现，不会用近似盒型冒充。
+
+### 继续做 CMF 包装效果图
+
+之前的 CMF 包装效果图功能保留在 2.0 中，没有被盒型功能替换。已有完成设计稿、旧版效果图或 CMF 参考图时，直接说明：
+
+```text
+保留这张包装的盒型、文字、Logo、颜色和版式，尺寸 80 × 40 × 120 mm，做哑膜加 Logo 局部 UV 的包装效果图。
+```
+
+CMF 流程会继续保留原稿结构和版式，只在指定区域表现材质与工艺；原有的材质库、工艺规则、提示词和 Provider 配置仍在 `references/`、`schemas/` 和 Module C 中。真实效果图需要用户确认并配置图像 Provider；Mock 结果只是测试输出，必须人工复核。
+
+注意：空白刀模只能生成结构模板，不能直接当作完成设计稿制作最终 CMF 效果图。效果图也不能替代 Illustrator/CAD 刀模确认、打样和印前文件。
+
+### 三句话记住
+
+1. **盒型 + 尺寸** → 生成可复制进 Illustrator 的 SVG 刀模。
+2. **完成设计稿 + 尺寸 + 材质/工艺** → 继续生成 CMF 包装效果图。
+3. **没有盒型** → 先选盒型；**没有真实 Provider** → 只做测试/规划，不冒充真实效果图。
+
 ## 模块
 
 - **Module A — Structure Template**：确定性生成可复制、可在 Illustrator 中继续编辑的 SVG 结构模板。
@@ -158,4 +192,4 @@ python3 -m compileall -q src scripts tests
 .venv/bin/python examples/full-workflow/run_demo.py --output output/full-workflow-demo
 ```
 
-当前共有 46 项自动化测试和 12 个 Evals。架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，Evals 见 [reports/PHASE5_EVALS_REPORT.md](reports/PHASE5_EVALS_REPORT.md)，总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。
+当前共有 53 项自动化测试和 12 个 Evals。架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，Evals 见 [reports/PHASE5_EVALS_REPORT.md](reports/PHASE5_EVALS_REPORT.md)，总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。
