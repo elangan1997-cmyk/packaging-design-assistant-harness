@@ -82,6 +82,7 @@ def render_svg(spec: StructureSpec, geometry: StructureGeometry, model_name: str
             "width": spec.dimensions.width,
             "height": spec.dimensions.height,
         },
+        "dimension_type": spec.dimensions.dimension_type,
         "parameters_mm": {
             "shrink": spec.shrink,
             "tuck_height": spec.tuck_height,
