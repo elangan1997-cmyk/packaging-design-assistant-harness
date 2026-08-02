@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_图层_2" data-name="图层 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 653.67 368.89">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: red;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke-miterlimit: 10;
+        stroke-width: .28px;
+      }
+
+      .cls-2 {
+        stroke: #000;
+      }
+    </style>
+  </defs>
+  <g id="_模切" data-name="模切">
+    <g>
+      <g>
+        <polyline class="cls-1" points="31.32 297.78 31.32 71.01 31.32 69.59 201.4 69.59"/>
+        <polyline class="cls-1" points="201.4 71.01 201.4 297.78 343.13 297.78 343.13 71.01 201.4 71.01"/>
+        <line class="cls-1" x1="343.13" y1="299.2" x2="513.21" y2="299.2"/>
+        <polyline class="cls-1" points="653.53 71.01 513.21 71.01 513.21 297.78 653.53 297.78"/>
+        <line class="cls-1" x1="343.13" y1="69.59" x2="513.21" y2="69.59"/>
+        <line class="cls-1" x1="31.32" y1="299.2" x2="201.4" y2="299.2"/>
+      </g>
+      <g>
+        <polyline class="cls-2" points="343.13 71.01 343.13 .14 513.21 .14 513.21 71.01"/>
+        <polyline class="cls-2" points="513.21 297.78 513.21 368.65 343.13 368.65 343.13 297.78"/>
+        <polyline class="cls-2" points="201.4 297.78 201.4 368.65 31.32 368.65 31.32 297.78"/>
+        <polyline class="cls-2" points="201.4 71.01 205.65 66.76 205.65 .14 338.88 .14 338.88 66.76 343.13 71.01"/>
+        <polyline class="cls-2" points="343.09 297.88 338.84 302.13 338.84 368.75 205.61 368.75 205.61 302.13 201.36 297.88"/>
+        <polyline class="cls-2" points="513.21 71.01 517.46 66.76 517.46 .14 649.28 .14 649.28 66.76 653.53 71.01"/>
+        <polyline class="cls-2" points="653.49 297.88 649.23 302.13 649.23 368.75 517.42 368.75 517.42 302.13 513.17 297.88"/>
+        <polyline class="cls-2" points="31.32 71.01 31.32 .14 201.4 .14 201.4 71.01"/>
+        <polyline class="cls-2" points="31.32 71.01 .14 79.36 .14 289.42 31.32 297.78"/>
+        <line class="cls-2" x1="653.53" y1="297.78" x2="653.53" y2="71.01"/>
+      </g>
+    </g>
+  </g>
+</svg>

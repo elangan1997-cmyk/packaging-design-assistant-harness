@@ -223,7 +223,10 @@ def route_request(request: PackagingRequest) -> RouteDecision:
             reason = f"未知盒型：{request.parameters['model_code']}"
         elif not model.implemented:
             implemented = False
-            reason = f"盒型“{model.name_zh}”已独立注册，但尚未完成原脚本几何复刻。"
+            reason = {
+                "carton.box_v2.mailer": "原脚本飞机盒样本实际为锁底盒结构，已拒绝作为飞机盒基准。",
+                "carton.box_v2.custom": "“其它”没有固定参数化结构，需要用户提供自定义结构定义。",
+            }.get(model.code, f"盒型“{model.name_zh}”尚未完成独立几何回归。")
         else:
             reason = f"model_available:{model.code}"
     if request.action == "mockup_render" and any(asset.role == "blank_structure_template" for asset in assets):

@@ -12,15 +12,15 @@ The original dialog exposes ten distinct radio-button models. They are represent
 
 | Original name | Harness model ID | Status |
 |---|---|---|
-| 直线盒 | `carton.box_v2.straight` | registered, not implemented |
+| 直线盒 | `carton.box_v2.straight` | implemented and regression-tested |
 | 锁底盒 | `carton.box_v2.lock_bottom` | implemented and regression-tested |
 | 飞机盒 | `carton.box_v2.mailer` | registered, not implemented |
-| 上盖盒 | `carton.box_v2.top_cover` | registered, not implemented |
-| 同向盖 | `carton.box_v2.same_direction_tuck` | registered, not implemented |
-| 粘底盒 | `carton.box_v2.glue_bottom` | registered, not implemented |
-| 挂耳盒 | `carton.box_v2.hang_tab` | registered, not implemented |
+| 上盖盒 | `carton.box_v2.top_cover` | implemented and regression-tested |
+| 同向盖 | `carton.box_v2.same_direction_tuck` | implemented and regression-tested |
+| 粘底盒 | `carton.box_v2.glue_bottom` | implemented and regression-tested |
+| 挂耳盒 | `carton.box_v2.hang_tab` | implemented and regression-tested |
 | 手提盒 | `carton.box_v2.carry_handle` | implemented and regression-tested |
-| 纸箱 | `carton.box_v2.shipping_carton` | registered, not implemented |
+| 纸箱 | `carton.box_v2.shipping_carton` | implemented and regression-tested |
 | 其它 | `carton.box_v2.custom` | registered, not implemented |
 
 This separation is deliberate: an unimplemented model returns `NOT_IMPLEMENTED`; it is never routed to the lock-bottom generator as a visual approximation.
@@ -47,6 +47,12 @@ The acceptance rule is one original Illustrator fixture per box model.
 |---|---|---:|---:|---:|---|
 | 锁底盒 | 80 × 40 × 120 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
 | 手提盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
+| 直线盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
+| 上盖盒 | 100 × 60 × 50 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
+| 同向盖 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
+| 粘底盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
+| 挂耳盒 | 300 × 200 × 150 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
+| 纸箱 | 60 × 50 × 80 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
 
 The previously captured 100 × 55 × 160 mm lock-bottom SVG remains historical evidence but is not part of the active one-sample-per-model matrix.
 
@@ -60,10 +66,18 @@ The test parser:
 4. converts Illustrator points using `72 / 25.4` points per millimetre;
 5. compares element kind, path command topology, element sequence, value count, and every coordinate against the newly generated SVG.
 
-Both active model samples pass at `0.001 mm` coordinate precision:
+The original two fixtures pass at `0.001 mm` coordinate precision. The six compact exports pass with the same primitive topology and a maximum accepted coordinate delta of `0.05 mm`, covering Illustrator's compact-export rounding and intentional sub-0.05 mm offsets:
 
 - 锁底盒: 7 non-empty crease primitives and 16 cut primitives match;
 - 手提盒: 8 non-empty crease primitives and 18 cut primitives match;
+- 直线盒: 7 crease primitives and 13 cut primitives match;
+- 上盖盒: 7 crease primitives and 14 cut primitives match;
+- 同向盖: 7 crease primitives and 13 cut primitives match;
+- 粘底盒: 7 crease primitives and 12 cut primitives match;
+- 挂耳盒: 7 crease primitives and 14 cut primitives match, including the rounded hanger aperture;
+- 纸箱: 6 crease primitives and 10 cut primitives match;
 - hand apertures, side slots, dust flaps, bottom locking tabs, and 15-degree glue tabs are included.
+
+The supplied plane-box candidate is not an airplane/mailer geometry: its panel and flap topology is a lock-bottom carton. It is excluded from the regression matrix, and the Harness intentionally returns `NOT_IMPLEMENTED` for `carton.box_v2.mailer` instead of reproducing that defect. The duplicated `04-上盖盒-100x60x160.svg` is also excluded because its geometry hash is identical to the supplied straight-carton sample.
 
 This is a geometry regression claim for the tested samples, not a production-readiness claim. Every generated file remains `DESIGN_TEMPLATE` and carries `REQUIRES_MANUFACTURER_REVIEW`.

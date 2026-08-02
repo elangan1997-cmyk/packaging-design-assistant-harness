@@ -4,7 +4,7 @@ from packaging_assistant.modules.structure.models import StructureModel
 
 
 MODELS: tuple[StructureModel, ...] = (
-    StructureModel("carton.box_v2.straight", "直线盒", ("直线盒", "直线", "straight"), False),
+    StructureModel("carton.box_v2.straight", "直线盒", ("直线盒", "直线", "straight"), True),
     StructureModel(
         "carton.box_v2.lock_bottom",
         "锁底盒",
@@ -12,17 +12,17 @@ MODELS: tuple[StructureModel, ...] = (
         True,
     ),
     StructureModel("carton.box_v2.mailer", "飞机盒", ("飞机盒", "mailer"), False),
-    StructureModel("carton.box_v2.top_cover", "上盖盒", ("上盖盒", "top cover"), False),
+    StructureModel("carton.box_v2.top_cover", "上盖盒", ("上盖盒", "top cover"), True),
     StructureModel(
         "carton.box_v2.same_direction_tuck",
         "同向盖",
         ("同向盖", "同向插口", "same direction tuck"),
-        False,
+        True,
     ),
-    StructureModel("carton.box_v2.glue_bottom", "粘底盒", ("粘底盒", "粘底", "glue bottom"), False),
-    StructureModel("carton.box_v2.hang_tab", "挂耳盒", ("挂耳盒", "挂耳", "hang tab"), False),
+    StructureModel("carton.box_v2.glue_bottom", "粘底盒", ("粘底盒", "粘底", "glue bottom"), True),
+    StructureModel("carton.box_v2.hang_tab", "挂耳盒", ("挂耳盒", "挂耳", "hang tab"), True),
     StructureModel("carton.box_v2.carry_handle", "手提盒", ("手提盒", "carry handle"), True),
-    StructureModel("carton.box_v2.shipping_carton", "纸箱", ("纸箱", "shipping carton"), False),
+    StructureModel("carton.box_v2.shipping_carton", "纸箱", ("纸箱", "shipping carton"), True),
     StructureModel("carton.box_v2.custom", "其它", ("其它", "其他", "custom"), False),
 )
 

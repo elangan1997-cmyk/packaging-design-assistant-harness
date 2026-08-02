@@ -62,10 +62,16 @@ Module A 至少需要：
 
 当前已确定性实现：
 
+- `直线盒` / `straight` → `carton.box_v2.straight`
 - `锁底盒` / `锁底` / `lock bottom` → `carton.box_v2.lock_bottom`
+- `上盖盒` / `top cover` → `carton.box_v2.top_cover`
+- `同向盖` / `same direction tuck` → `carton.box_v2.same_direction_tuck`
+- `粘底盒` / `glue bottom` → `carton.box_v2.glue_bottom`
+- `挂耳盒` / `hang tab` → `carton.box_v2.hang_tab`
 - `手提盒` / `carry handle` → `carton.box_v2.carry_handle`
+- `纸箱` / `shipping carton` → `carton.box_v2.shipping_carton`
 
-盒型2.0 的 `直线盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`纸箱`、`其它` 已分别注册，但在各自完成原脚本回归测试前必须返回 `NOT_IMPLEMENTED`，不得转用已实现盒型或通用近似模板。每个盒型使用一份原脚本 SVG 样本做独立黑盒回归。
+盒型2.0 的 `飞机盒` 与 `其它` 已分别注册，但当前必须返回 `NOT_IMPLEMENTED`，不得转用已实现盒型或通用近似模板。原因是原脚本飞机盒样本实际为锁底盒结构，而“其它”没有可参数化的固定结构。其余八个确定盒型各使用一份 Illustrator SVG 样本做独立黑盒回归。
 
 纸厚、糊口、出血、安全区可以使用模型的明确默认值，但必须在结果中列出。不能从图片像素猜真实物理尺寸。
 
@@ -85,7 +91,7 @@ Module B 当前只使用用户资料与占位规则。不得补写企业、许�
 }
 ```
 
-锁底盒或手提盒请求参数（替换 `model_code`）：
+结构模板请求参数（按上方映射替换 `model_code`）：
 
 ```json
 {

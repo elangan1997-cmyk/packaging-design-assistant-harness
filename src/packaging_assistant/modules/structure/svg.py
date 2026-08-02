@@ -35,7 +35,7 @@ def _points(values: tuple[float, ...]) -> str:
 def _path_d(primitive: Primitive) -> str:
     values = iter(primitive.values)
     chunks: list[str] = []
-    sizes = {"M": 2, "L": 2, "C": 6, "H": 1, "c": 6, "h": 1, "l": 2, "v": 1, "z": 0}
+    sizes = {"M": 2, "L": 2, "C": 6, "S": 4, "H": 1, "c": 6, "s": 4, "h": 1, "l": 2, "v": 1, "z": 0}
     for command in primitive.commands:
         size = sizes[command]
         numbers = [_n(next(values)) for _ in range(size)]
@@ -50,6 +50,12 @@ def _primitive_xml(primitive: Primitive, css_class: str) -> str:
         return f'<line {attrs} x1="{_n(x1)}" y1="{_n(y1)}" x2="{_n(x2)}" y2="{_n(y2)}" />'
     if primitive.kind == "polyline":
         return f'<polyline {attrs} points="{_points(primitive.values)}" />'
+    if primitive.kind == "rect":
+        x, y, width, height, rx, ry = primitive.values
+        return (
+            f'<rect {attrs} x="{_n(x)}" y="{_n(y)}" width="{_n(width)}" '
+            f'height="{_n(height)}" rx="{_n(rx)}" ry="{_n(ry)}" />'
+        )
     return f'<path {attrs} data-commands="{" ".join(primitive.commands)}" d="{_path_d(primitive)}" />'
 
 

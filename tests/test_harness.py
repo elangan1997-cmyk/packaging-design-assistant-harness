@@ -63,13 +63,13 @@ def _original_group_primitives(path: Path, group_index: int) -> tuple[list[tuple
 
 
 def _translated_path_values(commands: tuple[str, ...], values: list[float], dx: float, dy: float) -> list[float]:
-    sizes = {"M": 2, "L": 2, "C": 6, "H": 1, "c": 6, "h": 1, "l": 2, "v": 1, "z": 0}
+    sizes = {"M": 2, "L": 2, "C": 6, "S": 4, "H": 1, "c": 6, "s": 4, "h": 1, "l": 2, "v": 1, "z": 0}
     translated: list[float] = []
     index = 0
     for command in commands:
         size = sizes[command]
         current = values[index:index + size]
-        if command in {"M", "L", "C"}:
+        if command in {"M", "L", "C", "S"}:
             for pair_index in range(0, size, 2):
                 current[pair_index] += dx
                 current[pair_index + 1] += dy
@@ -110,6 +110,52 @@ def _original_carry_primitives(path: Path, baseline_y: float) -> tuple[list[tupl
     return parse(list(children[0])), parse(list(children[1]) + children[2:])
 
 
+def _supplied_fixture_primitives(path: Path, baseline_y: float, origin_x: float = 11.049) -> tuple[list[tuple], list[tuple]]:
+    """Parse compact Illustrator exports whose visible groups are nested one level deeper."""
+    root = ET.parse(path).getroot()
+    containers: list[tuple[ET.Element, list[ET.Element]]] = []
+    for group in root.iter():
+        if _tag(group) != "g":
+            continue
+        primitives = [item for item in list(group) if _tag(item) in {"line", "polyline", "path", "rect"}]
+        if primitives:
+            containers.append((group, primitives))
+    crease_items = containers[-2][1]
+    cut_items = [item for _, items in containers[:-2] for item in items] + containers[-1][1]
+
+    def parse(items: list[ET.Element]) -> list[tuple]:
+        result: list[tuple] = []
+        for item in items:
+            kind = _tag(item)
+            if kind == "path" and not item.attrib.get("d", "").strip():
+                continue
+            if kind == "line":
+                values = [float(item.attrib[key]) / PT_PER_MM for key in ("x1", "y1", "x2", "y2")]
+                values[0] -= origin_x
+                values[1] -= baseline_y
+                values[2] -= origin_x
+                values[3] -= baseline_y
+                result.append((kind, (), values))
+            elif kind == "polyline":
+                values = [value / PT_PER_MM for value in _numbers(item.attrib["points"])]
+                for index in range(0, len(values), 2):
+                    values[index] -= origin_x
+                    values[index + 1] -= baseline_y
+                result.append((kind, (), values))
+            elif kind == "path":
+                commands = tuple(re.findall(r"[A-Za-z]", item.attrib["d"]))
+                values = [value / PT_PER_MM for value in _numbers(item.attrib["d"])]
+                result.append((kind, commands, _translated_path_values(commands, values, -origin_x, -baseline_y)))
+            elif kind == "rect":
+                values = [float(item.attrib[key]) / PT_PER_MM for key in ("x", "y", "width", "height", "rx", "ry")]
+                values[0] -= origin_x
+                values[1] -= baseline_y
+                result.append((kind, (), values))
+        return result
+
+    return parse(crease_items), parse(cut_items)
+
+
 def _generated_primitives(svg: str, layer_id: str) -> list[tuple]:
     root = ET.fromstring(svg)
     layer = next(item for item in root.findall(f"{SVG_NS}g") if item.attrib.get("id") == layer_id)
@@ -123,17 +169,19 @@ def _generated_primitives(svg: str, layer_id: str) -> list[tuple]:
             result.append((kind, (), _numbers(item.attrib["points"])))
         elif kind == "path":
             result.append((kind, tuple(item.attrib["data-commands"].split()), _numbers(item.attrib["d"])))
+        elif kind == "rect":
+            result.append((kind, (), [float(item.attrib[key]) for key in ("x", "y", "width", "height", "rx", "ry")]))
     return result
 
 
-def _assert_primitives_equal(test: unittest.TestCase, actual: list[tuple], expected: list[tuple]) -> None:
+def _assert_primitives_equal(test: unittest.TestCase, actual: list[tuple], expected: list[tuple], places: int = 3) -> None:
     test.assertEqual(len(actual), len(expected))
     for index, (actual_item, expected_item) in enumerate(zip(actual, expected)):
         test.assertEqual(actual_item[0], expected_item[0], f"primitive {index} kind")
         test.assertEqual(actual_item[1], expected_item[1], f"primitive {index} commands")
         test.assertEqual(len(actual_item[2]), len(expected_item[2]), f"primitive {index} value count")
         for number_index, (left, right) in enumerate(zip(actual_item[2], expected_item[2])):
-            test.assertAlmostEqual(left, right, places=3, msg=f"primitive {index} value {number_index}")
+            test.assertAlmostEqual(left, right, places=places, msg=f"primitive {index} value {number_index}")
 
 
 def _write_blank_template(directory: Path) -> Path:
@@ -185,8 +233,11 @@ class HarnessContractTests(unittest.TestCase):
         prompt = result.route["choice_prompt"]
         self.assertEqual(prompt["field"], "model_code")
         self.assertEqual(prompt["message"], "请选择盒型")
-        self.assertEqual([item["label"] for item in prompt["options"][:2]], ["锁底盒", "手提盒"])
-        self.assertTrue(all(item["status"] == "available" for item in prompt["options"][:2]))
+        self.assertEqual(
+            [item["label"] for item in prompt["options"][:8]],
+            ["直线盒", "锁底盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"],
+        )
+        self.assertTrue(all(item["status"] == "available" for item in prompt["options"][:8]))
         self.assertEqual(len(prompt["options"]), 10)
 
     def test_missing_model_returns_conversational_choices(self) -> None:
@@ -205,7 +256,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(result.route["choice_prompt"]["message"], "请选择盒型")
         self.assertEqual(
             [item["status"] for item in result.route["choice_prompt"]["options"]],
-            ["available", "available"] + ["not_implemented"] * 8,
+            ["available"] * 8 + ["not_implemented"] * 2,
         )
 
     def test_unfinished_structure_model_is_honestly_not_implemented(self) -> None:
@@ -213,7 +264,7 @@ class HarnessContractTests(unittest.TestCase):
             {
                 "action": "structure_template",
                 "parameters": {
-                    "model_code": "直线盒",
+                    "model_code": "飞机盒",
                     "dimensions": {"length": 80, "width": 40, "height": 120, "unit": "mm"},
                 },
             }
@@ -227,7 +278,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(len(models), 10)
         self.assertEqual(len({item["code"] for item in models}), 10)
         implemented = [item["name_zh"] for item in models if item["implemented"]]
-        self.assertEqual(implemented, ["锁底盒", "手提盒"])
+        self.assertEqual(implemented, ["直线盒", "锁底盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"])
 
     def test_lock_bottom_structure_job_writes_three_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -303,6 +354,84 @@ class HarnessContractTests(unittest.TestCase):
         )
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease)
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut)
+
+    def test_straight_matches_supplied_script_at_100x60x160(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "直线盒",
+            "dimensions": {"length": 100, "width": 60, "height": 160, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-straight-100x60x160.svg",
+            659.2 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=1)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=1)
+
+    def test_top_cover_matches_supplied_script_at_100x60x50(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "上盖盒",
+            "dimensions": {"length": 100, "width": 60, "height": 50, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-top-cover-100x60x50.svg",
+            347.39 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=2)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=2)
+
+    def test_same_direction_tuck_matches_supplied_script_at_100x60x160(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "同向盖",
+            "dimensions": {"length": 100, "width": 60, "height": 160, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-same-direction-tuck-100x60x160.svg",
+            659.2 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=2)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=2)
+
+    def test_glue_bottom_matches_supplied_script_at_100x60x160(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "粘底盒",
+            "dimensions": {"length": 100, "width": 60, "height": 160, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-glue-bottom-100x60x160.svg",
+            659.2 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=2)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=2)
+
+    def test_hang_tab_matches_supplied_script_at_300x200x150(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "挂耳盒",
+            "dimensions": {"length": 300, "width": 200, "height": 150, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-hang-tab-300x200x150.svg",
+            1027.7 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=2)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=2)
+
+    def test_shipping_carton_matches_supplied_script_at_60x50x80(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "纸箱",
+            "dimensions": {"length": 60, "width": 50, "height": 80, "unit": "mm"},
+        })
+        original_crease, original_cut = _supplied_fixture_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-shipping-carton-60x50x80.svg",
+            297.78 / PT_PER_MM,
+            31.32 / PT_PER_MM,
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=1)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=1)
 
     def test_mockup_dry_run_never_calls_provider(self) -> None:
         result = run_packaging_request(
