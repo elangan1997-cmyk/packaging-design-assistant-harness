@@ -7,7 +7,7 @@ from packaging_assistant.api import (
 )
 from packaging_assistant.models import PackagingRequest, PackagingResult
 
-__version__ = "0.7.0"
+__version__ = "2.0.0"
 
 __all__ = [
     "PackagingRequest",

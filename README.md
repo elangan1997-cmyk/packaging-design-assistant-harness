@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.7.0` 已完成架构底座、证据式自动路由、九个经 Illustrator SVG 黑盒回归验证的 Module A 盒型、Module B 内容编排闭环、Module C Provider/视觉 QA，以及 12 案例 Evals 和完整工作流 Demo。`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱` 可直接生成 SVG。“其它”需要自定义结构定义，保持 `not_implemented`。飞机盒使用用户提供的 `资源 9.svg`，默认按内尺寸和 `0.3 mm` 纸厚建模，并保留 `5 mm` 出血记录。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
+当前 `2.0.0` 已完成架构底座、证据式自动路由、九个经 Illustrator SVG 黑盒回归验证的 Module A 盒型、Module B 内容编排闭环、Module C Provider/视觉 QA，以及 12 案例 Evals 和完整工作流 Demo。`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱` 可直接生成 SVG。“其它”需要自定义结构定义，保持 `not_implemented`。飞机盒使用用户提供的 `资源 9.svg`，默认按内尺寸和 `0.3 mm` 纸厚建模，并保留 `5 mm` 出血记录。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
 
 ## 自然语言使用
 
