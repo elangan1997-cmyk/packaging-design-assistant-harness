@@ -64,6 +64,7 @@ Module A 至少需要：
 
 - `直线盒` / `straight` → `carton.box_v2.straight`
 - `锁底盒` / `锁底` / `lock bottom` → `carton.box_v2.lock_bottom`
+- `飞机盒` / `mailer` → `carton.box_v2.mailer`
 - `上盖盒` / `top cover` → `carton.box_v2.top_cover`
 - `同向盖` / `same direction tuck` → `carton.box_v2.same_direction_tuck`
 - `粘底盒` / `glue bottom` → `carton.box_v2.glue_bottom`
@@ -71,7 +72,7 @@ Module A 至少需要：
 - `手提盒` / `carry handle` → `carton.box_v2.carry_handle`
 - `纸箱` / `shipping carton` → `carton.box_v2.shipping_carton`
 
-盒型2.0 的 `飞机盒` 与 `其它` 已分别注册，但当前必须返回 `NOT_IMPLEMENTED`，不得转用已实现盒型或通用近似模板。原因是原脚本飞机盒样本实际为锁底盒结构，而“其它”没有可参数化的固定结构。其余八个确定盒型各使用一份 Illustrator SVG 样本做独立黑盒回归。
+盒型2.0 的 `其它` 已注册，但当前必须返回 `NOT_IMPLEMENTED`，不得转用已实现盒型或通用近似模板，因为它没有固定参数化结构。飞机盒使用用户提供的 `资源 9.svg` 作为独立黑盒基准，按内尺寸、纸厚 `0.3 mm` 和出血 `5 mm` 记录；原先的锁底盒样本不会再被当作飞机盒。
 
 纸厚、糊口、出血、安全区可以使用模型的明确默认值，但必须在结果中列出。不能从图片像素猜真实物理尺寸。
 
@@ -108,6 +109,26 @@ Module B 当前只使用用户资料与占位规则。不得补写企业、许�
     "shrink": 0.7,
     "tuck_height": 15,
     "glue_width": 14
+  }
+}
+```
+
+飞机盒若使用内尺寸，需同时保留纸厚和出血参数：
+
+```json
+{
+  "model_code": "carton.box_v2.mailer",
+  "parameters": {
+    "dimensions": {
+      "length": 300,
+      "width": 200,
+      "height": 60,
+      "unit": "mm",
+      "dimension_type": "finished_inner"
+    },
+    "board_thickness": 0.3,
+    "bleed": 5,
+    "material": "200g白卡(0.3mm)"
   }
 }
 ```

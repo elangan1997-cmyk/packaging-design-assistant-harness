@@ -6,6 +6,7 @@ from typing import Any
 from packaging_assistant.exceptions import NotImplementedCapabilityError, RequestValidationError
 from packaging_assistant.modules.structure.carry_handle import build_carry_handle
 from packaging_assistant.modules.structure.lock_bottom import build_lock_bottom
+from packaging_assistant.modules.structure.mailer import build_mailer
 from packaging_assistant.modules.structure.shipping_carton import build_shipping_carton
 from packaging_assistant.modules.structure.tuck_cartons import (
     build_glue_bottom,
@@ -38,9 +39,14 @@ def generate_structure_template(parameters: dict[str, Any]) -> StructureGenerati
         )
     canonical_parameters = dict(parameters)
     canonical_parameters["model_code"] = model.code
+    if model.code == "carton.box_v2.mailer":
+        canonical_parameters.setdefault("board_thickness", 0.3)
+        canonical_parameters.setdefault("bleed", 5.0)
+        canonical_parameters.setdefault("material", "200g白卡(0.3mm)")
     versions = {
         "carton.box_v2.straight": "box-v2.0-straight-1.0",
         "carton.box_v2.lock_bottom": "box-v2.0-lock-bottom-1.0",
+        "carton.box_v2.mailer": "box-v2.0-mailer-1.0",
         "carton.box_v2.top_cover": "box-v2.0-top-cover-1.0",
         "carton.box_v2.same_direction_tuck": "box-v2.0-same-direction-tuck-1.0",
         "carton.box_v2.glue_bottom": "box-v2.0-glue-bottom-1.0",
@@ -59,6 +65,7 @@ def generate_structure_template(parameters: dict[str, Any]) -> StructureGenerati
     builders = {
         "carton.box_v2.straight": build_straight,
         "carton.box_v2.lock_bottom": build_lock_bottom,
+        "carton.box_v2.mailer": build_mailer,
         "carton.box_v2.top_cover": build_top_cover,
         "carton.box_v2.same_direction_tuck": build_same_direction_tuck,
         "carton.box_v2.glue_bottom": build_glue_bottom,

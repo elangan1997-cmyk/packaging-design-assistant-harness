@@ -10,6 +10,7 @@ They are test evidence only. Runtime code does not load or execute the proprieta
 |---|---|---|---:|---|
 | `box-v2-lock-bottom-80x40x120.svg` | 锁底盒 L80 W40 H120 S0.5 T12 G11 mm | active | 2 | `22883bb3d70d46a311b8e944d068246430a8f23863e0a1f9274e1fa52b6b8619` |
 | `box-v2-carry-handle-100x60x160.svg` | 手提盒 L100 W60 H160 S0.5 T12 G11 mm | active | 1, normalized from Y=297 mm | `bb74929700012796aca9ecb40deceb2638d04cd3fcd6e1d88cc5808502a41f8e` |
+| `box-v2-mailer-300x200x60.svg` | 飞机盒 inner L300 W200 H60, board 0.3 mm, bleed 5 mm | active | supplied dimension SVG | `82a87c056e224b852a2197154a3c558385a80a7abbdb89d4ec1f13c6d049e449` |
 | `box-v2-straight-100x60x160.svg` | 直线盒 L100 W60 H160 S0.5 T12 G11 mm | active | compact nested groups | `4d8bd902fcefc026bb58ffe001ea563d39ec6f334775584a12ce367dd3d11899` |
 | `box-v2-top-cover-100x60x50.svg` | 上盖盒 L100 W60 H50 S0.5 T12 G11 mm | active | compact nested groups | `cc6be07bf1a47524fbbf18dc63d5aeb5b39c4792ddca218e01cc1280a750ff7e` |
 | `box-v2-same-direction-tuck-100x60x160.svg` | 同向盖 L100 W60 H160 S0.5 T12 G11 mm | active | compact nested groups | `89ee084d38625d4385c1a67c354a6e4441c95384a21201e8ff7c234f42cc9446` |

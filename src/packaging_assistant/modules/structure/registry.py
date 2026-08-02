@@ -11,7 +11,7 @@ MODELS: tuple[StructureModel, ...] = (
         ("锁底盒", "锁底", "lock bottom", "lock-bottom", "auto lock bottom"),
         True,
     ),
-    StructureModel("carton.box_v2.mailer", "飞机盒", ("飞机盒", "mailer"), False),
+    StructureModel("carton.box_v2.mailer", "飞机盒", ("飞机盒", "mailer"), True),
     StructureModel("carton.box_v2.top_cover", "上盖盒", ("上盖盒", "top cover"), True),
     StructureModel(
         "carton.box_v2.same_direction_tuck",

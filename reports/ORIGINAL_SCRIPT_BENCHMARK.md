@@ -14,7 +14,7 @@ The original dialog exposes ten distinct radio-button models. They are represent
 |---|---|---|
 | 直线盒 | `carton.box_v2.straight` | implemented and regression-tested |
 | 锁底盒 | `carton.box_v2.lock_bottom` | implemented and regression-tested |
-| 飞机盒 | `carton.box_v2.mailer` | registered, not implemented |
+| 飞机盒 | `carton.box_v2.mailer` | implemented and regression-tested |
 | 上盖盒 | `carton.box_v2.top_cover` | implemented and regression-tested |
 | 同向盖 | `carton.box_v2.same_direction_tuck` | implemented and regression-tested |
 | 粘底盒 | `carton.box_v2.glue_bottom` | implemented and regression-tested |
@@ -47,6 +47,7 @@ The acceptance rule is one original Illustrator fixture per box model.
 |---|---|---:|---:|---:|---|
 | 锁底盒 | 80 × 40 × 120 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
 | 手提盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | raw Illustrator SVG fixture |
+| 飞机盒 | 300 × 200 × 60 mm inner | 0.5 | 12 | 11 | supplied dimension SVG; board 0.3, bleed 5 |
 | 直线盒 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
 | 上盖盒 | 100 × 60 × 50 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
 | 同向盖 | 100 × 60 × 160 mm | 0.5 | 12 | 11 | compact Illustrator SVG fixture |
@@ -66,7 +67,7 @@ The test parser:
 4. converts Illustrator points using `72 / 25.4` points per millimetre;
 5. compares element kind, path command topology, element sequence, value count, and every coordinate against the newly generated SVG.
 
-The original two fixtures pass at `0.001 mm` coordinate precision. The six compact exports pass with the same primitive topology and a maximum accepted coordinate delta of `0.05 mm`, covering Illustrator's compact-export rounding and intentional sub-0.05 mm offsets:
+The lock-bottom, carry-handle, and mailer fixtures pass at `0.001 mm` coordinate precision. The six compact exports pass with the same primitive topology and a maximum accepted coordinate delta of `0.05 mm`, covering Illustrator's compact-export rounding and intentional sub-0.05 mm offsets:
 
 - 锁底盒: 7 non-empty crease primitives and 16 cut primitives match;
 - 手提盒: 8 non-empty crease primitives and 18 cut primitives match;
@@ -76,8 +77,9 @@ The original two fixtures pass at `0.001 mm` coordinate precision. The six compa
 - 粘底盒: 7 crease primitives and 12 cut primitives match;
 - 挂耳盒: 7 crease primitives and 14 cut primitives match, including the rounded hanger aperture;
 - 纸箱: 6 crease primitives and 10 cut primitives match;
+- 飞机盒: 20 crease primitives and 2 source cut paths match, including rounded lid/side transitions and interlocking bottom outline;
 - hand apertures, side slots, dust flaps, bottom locking tabs, and 15-degree glue tabs are included.
 
-The supplied plane-box candidate is not an airplane/mailer geometry: its panel and flap topology is a lock-bottom carton. It is excluded from the regression matrix, and the Harness intentionally returns `NOT_IMPLEMENTED` for `carton.box_v2.mailer` instead of reproducing that defect. The duplicated `04-上盖盒-100x60x160.svg` is also excluded because its geometry hash is identical to the supplied straight-carton sample.
+The earlier `02-锁底盒-220x160x60.svg` candidate is not an airplane/mailer geometry and remains excluded. The later supplied `资源 9.svg` is accepted as the valid mailer baseline. The duplicated `04-上盖盒-100x60x160.svg` is also excluded because its geometry hash is identical to the supplied straight-carton sample.
 
 This is a geometry regression claim for the tested samples, not a production-readiness claim. Every generated file remains `DESIGN_TEMPLATE` and carries `REQUIRES_MANUFACTURER_REVIEW`.

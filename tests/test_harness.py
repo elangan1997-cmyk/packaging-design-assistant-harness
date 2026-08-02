@@ -156,6 +156,44 @@ def _supplied_fixture_primitives(path: Path, baseline_y: float, origin_x: float 
     return parse(crease_items), parse(cut_items)
 
 
+def _original_mailer_primitives(path: Path) -> tuple[list[tuple], list[tuple]]:
+    root = ET.parse(path).getroot()
+    command_sizes = {
+        "M": 2, "L": 2, "C": 6, "S": 4, "H": 1, "V": 1, "Z": 0,
+        "c": 6, "s": 4, "h": 1, "v": 1, "l": 2, "z": 0,
+    }
+
+    def parse_path(d: str) -> tuple[tuple[str, ...], list[float]]:
+        tokens = re.findall(r"[A-Za-z]|[-+]?(?:\d*\.\d+|\d+)", d)
+        commands: list[str] = []
+        values: list[float] = []
+        index = 0
+        command = None
+        while index < len(tokens):
+            if tokens[index].isalpha():
+                command = tokens[index]
+                index += 1
+            size = command_sizes[command]
+            commands.append(command)
+            values.extend(float(item) / PT_PER_MM for item in tokens[index:index + size])
+            index += size
+            if command in {"Z", "z"}:
+                command = None
+        return tuple(commands), values
+
+    cut: list[tuple] = []
+    crease: list[tuple] = []
+    for item in root.iter():
+        kind = _tag(item)
+        if kind == "path" and item.attrib.get("class") == "cls-3":
+            commands, values = parse_path(item.attrib["d"])
+            cut.append((kind, commands, values))
+        elif kind == "line" and item.attrib.get("class") == "cls-2":
+            values = [float(item.attrib[key]) / PT_PER_MM for key in ("x1", "y1", "x2", "y2")]
+            crease.append((kind, (), values))
+    return crease, cut
+
+
 def _generated_primitives(svg: str, layer_id: str) -> list[tuple]:
     root = ET.fromstring(svg)
     layer = next(item for item in root.findall(f"{SVG_NS}g") if item.attrib.get("id") == layer_id)
@@ -234,10 +272,10 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(prompt["field"], "model_code")
         self.assertEqual(prompt["message"], "请选择盒型")
         self.assertEqual(
-            [item["label"] for item in prompt["options"][:8]],
-            ["直线盒", "锁底盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"],
+            [item["label"] for item in prompt["options"][:9]],
+            ["直线盒", "锁底盒", "飞机盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"],
         )
-        self.assertTrue(all(item["status"] == "available" for item in prompt["options"][:8]))
+        self.assertTrue(all(item["status"] == "available" for item in prompt["options"][:9]))
         self.assertEqual(len(prompt["options"]), 10)
 
     def test_missing_model_returns_conversational_choices(self) -> None:
@@ -256,7 +294,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(result.route["choice_prompt"]["message"], "请选择盒型")
         self.assertEqual(
             [item["status"] for item in result.route["choice_prompt"]["options"]],
-            ["available"] * 8 + ["not_implemented"] * 2,
+            ["available"] * 9 + ["not_implemented"],
         )
 
     def test_unfinished_structure_model_is_honestly_not_implemented(self) -> None:
@@ -264,7 +302,7 @@ class HarnessContractTests(unittest.TestCase):
             {
                 "action": "structure_template",
                 "parameters": {
-                    "model_code": "飞机盒",
+                    "model_code": "其它",
                     "dimensions": {"length": 80, "width": 40, "height": 120, "unit": "mm"},
                 },
             }
@@ -278,7 +316,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertEqual(len(models), 10)
         self.assertEqual(len({item["code"] for item in models}), 10)
         implemented = [item["name_zh"] for item in models if item["implemented"]]
-        self.assertEqual(implemented, ["直线盒", "锁底盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"])
+        self.assertEqual(implemented, ["直线盒", "锁底盒", "飞机盒", "上盖盒", "同向盖", "粘底盒", "挂耳盒", "手提盒", "纸箱"])
 
     def test_lock_bottom_structure_job_writes_three_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -432,6 +470,22 @@ class HarnessContractTests(unittest.TestCase):
         )
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease, places=1)
         _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut, places=1)
+
+    def test_mailer_matches_supplied_dimension_svg_at_300x200x60(self) -> None:
+        generated = generate_structure_template({
+            "model_code": "飞机盒",
+            "dimensions": {"length": 300, "width": 200, "height": 60, "unit": "mm", "dimension_type": "finished_inner"},
+            "board_thickness": 0.3,
+            "bleed": 5,
+            "material": "200g白卡(0.3mm)",
+        })
+        original_crease, original_cut = _original_mailer_primitives(
+            ROOT / "tests/fixtures/original-script/box-v2-mailer-300x200x60.svg"
+        )
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CREASE"), original_crease)
+        _assert_primitives_equal(self, _generated_primitives(generated.svg, "LAYER_CUT"), original_cut)
+        self.assertEqual(generated.spec["board_thickness"], 0.3)
+        self.assertEqual(generated.spec["bleed"], 5.0)
 
     def test_mockup_dry_run_never_calls_provider(self) -> None:
         result = run_packaging_request(

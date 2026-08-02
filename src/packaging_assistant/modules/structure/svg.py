@@ -35,7 +35,7 @@ def _points(values: tuple[float, ...]) -> str:
 def _path_d(primitive: Primitive) -> str:
     values = iter(primitive.values)
     chunks: list[str] = []
-    sizes = {"M": 2, "L": 2, "C": 6, "S": 4, "H": 1, "c": 6, "s": 4, "h": 1, "l": 2, "v": 1, "z": 0}
+    sizes = {"M": 2, "L": 2, "C": 6, "S": 4, "H": 1, "V": 1, "Z": 0, "c": 6, "s": 4, "h": 1, "v": 1, "l": 2, "z": 0}
     for command in primitive.commands:
         size = sizes[command]
         numbers = [_n(next(values)) for _ in range(size)]
@@ -88,6 +88,8 @@ def render_svg(spec: StructureSpec, geometry: StructureGeometry, model_name: str
             "glue_width": spec.glue_width,
             "bleed": spec.bleed,
             "safe_margin": spec.safe_margin,
+            "board_thickness": spec.board_thickness,
+            "material": spec.material,
         },
         "output_mode": spec.output_mode,
         "warning": "REQUIRES_MANUFACTURER_REVIEW",

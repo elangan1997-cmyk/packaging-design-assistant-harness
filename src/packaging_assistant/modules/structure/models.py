@@ -73,6 +73,8 @@ class StructureSpec:
     glue_width: float = 11.0
     bleed: float = 3.0
     safe_margin: float = 3.0
+    board_thickness: float = 0.0
+    material: str = ""
     output_mode: str = "DESIGN_TEMPLATE"
     model_version: str = "box-v2.0-1.0"
 
@@ -86,14 +88,18 @@ class StructureSpec:
             ("glue_width", 11.0),
             ("bleed", 3.0),
             ("safe_margin", 3.0),
+            ("board_thickness", 0.0),
         ):
             try:
-                values[key] = float(data.get(key, default))
+                source_value = data.get(key, default)
+                if key == "board_thickness" and "board_thickness" not in data:
+                    source_value = data.get("thickness", default)
+                values[key] = float(source_value)
             except (TypeError, ValueError) as exc:
                 raise RequestValidationError(
                     "INVALID_PARAMETER", f"{key} 必须是数字。", {"field": key}
                 ) from exc
-        if values["shrink"] < 0 or min(values["tuck_height"], values["glue_width"]) <= 0:
+        if values["shrink"] < 0 or min(values["tuck_height"], values["glue_width"]) <= 0 or values["board_thickness"] < 0:
             raise RequestValidationError(
                 "INVALID_PARAMETER", "缩位不能为负；插舌高度和粘口宽度必须大于 0。"
             )
@@ -105,6 +111,8 @@ class StructureSpec:
             glue_width=values["glue_width"],
             bleed=values["bleed"],
             safe_margin=values["safe_margin"],
+            board_thickness=values["board_thickness"],
+            material=str(data.get("material", "")),
             output_mode=str(data.get("output_mode", "DESIGN_TEMPLATE")),
             model_version=str(data.get("model_version", "box-v2.0-1.0")),
         )
