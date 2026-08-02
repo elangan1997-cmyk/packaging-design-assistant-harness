@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.5.0` 已完成架构底座、两个经原脚本回归验证的 Module A 盒型、Module B 内容编排闭环，以及 Module C 的 Provider 调度、视觉 QA 和有限重试。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型仍按模型返回 `not_implemented`。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
+当前 `0.6.0` 已完成架构底座、证据式自动路由、两个经原脚本回归验证的 Module A 盒型、Module B 内容编排闭环、Module C Provider/视觉 QA，以及 12 案例 Evals 和完整工作流 Demo。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型仍按模型返回 `not_implemented`。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
 
 ## 自然语言使用
 
@@ -122,6 +122,8 @@ packaging-assistant health-check
 
 Dry Run 只报告路由、缺失输入、Provider、费用可能性、预计输出和人工复核项，不会调用真实 Provider。
 
+自动路由同时使用用户目标、Asset Classifier 和参数事实，输出 `route`、`confidence`、`missing_fields`、`next_action`、`needs_clarification` 和 `evidence`。不明确或冲突时每次只提出一个关键问题。
+
 ## Python API
 
 ```python
@@ -152,6 +154,8 @@ print(result.to_dict())
 ```bash
 python3 -m unittest discover -v
 python3 -m compileall -q src scripts tests
+.venv/bin/python evals/run_evals.py
+.venv/bin/python examples/full-workflow/run_demo.py --output output/full-workflow-demo
 ```
 
-架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，当前总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。
+当前共有 46 项自动化测试和 12 个 Evals。架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，Evals 见 [reports/PHASE5_EVALS_REPORT.md](reports/PHASE5_EVALS_REPORT.md)，总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。

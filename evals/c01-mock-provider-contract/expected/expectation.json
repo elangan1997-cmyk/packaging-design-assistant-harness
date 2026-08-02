@@ -1,0 +1,20 @@
+{
+  "outputs": [
+    "cmf-plan.json",
+    "generation-record.json",
+    "mockup.png",
+    "retry-record.json",
+    "review-checklist.md",
+    "visual-qa.json"
+  ],
+  "pass_condition": "six outputs are produced and Mock never reports a real render",
+  "route": "mockup_render",
+  "tools": [
+    "VisionProvider",
+    "ImageGenerationProvider",
+    "visual QA"
+  ],
+  "warnings": [
+    "MOCK_OUTPUT_NOT_A_REAL_CMF_RENDER"
+  ]
+}

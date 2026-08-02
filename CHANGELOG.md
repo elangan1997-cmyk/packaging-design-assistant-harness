@@ -21,6 +21,9 @@
 - CMF plan, generation record, independent visual QA, retry record, review checklist, and six-file mockup output.
 - Soft-packaging heat-seal and bottle/label protection rules, with blank-dieline and missing-dimension blockers.
 - Provider, CMF-plan, and visual-QA schemas plus Module C contract tests.
+- Evidence-backed route inference for structure, content, mockup, multi-stage, and clarification outcomes.
+- Eight-case routing acceptance matrix, 12 runnable Evals (four per module), and a complete A -> B -> Mock C workflow demo.
+- Expanded health check for CLI, schemas, examples, writable output, and minimum structure generation.
 
 ### Changed
 

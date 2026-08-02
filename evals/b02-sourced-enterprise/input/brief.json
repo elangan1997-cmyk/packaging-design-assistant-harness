@@ -1,0 +1,18 @@
+{
+  "brand": {
+    "name": "测试品牌"
+  },
+  "jurisdiction": "CN",
+  "manufacturer": {
+    "address": "用户提供的生产地址",
+    "license_number": "用户提供的许可证编号",
+    "name": "用户提供的生产企业"
+  },
+  "product": {
+    "name": "观赏鱼专用盐",
+    "net_content": "500 g"
+  },
+  "standards": {
+    "execution_standard": "用户提供的执行标准"
+  }
+}

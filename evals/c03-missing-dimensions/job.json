@@ -1,0 +1,7 @@
+{
+  "action": "mockup_render",
+  "parameters": {
+    "artwork": "${CASE}/input/completed-artwork.svg",
+    "material": "paperboard"
+  }
+}

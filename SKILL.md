@@ -122,6 +122,8 @@ Module B 成功时读取全部五个输出，重点检查 `missing-fields.md` �
 
 先运行 Dry Run 可检查：路由、输入、缺失字段、Provider、费用风险、预计输出和人工复核项。Dry Run 不得调用真实付费 API。
 
+自动路由不得只给模型自报置信度。读取 Asset Classifier 和参数事实，并向用户或执行器返回判断证据。路由冲突或证据不足时，每次只问一个当前最关键的问题。
+
 将入口返回的 JSON 原样视为执行事实。`success: true` 也要读取输出文件和验证报告；`status: not_implemented` 时必须明确告诉用户，不能临时自由画 SVG 或伪装已经完成。
 
 ## 模型与确定性代码边界

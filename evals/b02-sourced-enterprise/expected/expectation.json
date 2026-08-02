@@ -1,0 +1,20 @@
+{
+  "outputs": [
+    "content-layout.svg",
+    "content-spec.json",
+    "missing-fields.md",
+    "review-checklist.md",
+    "source-report.md"
+  ],
+  "pass_condition": "sources/statuses are present and protected structure layers remain unchanged",
+  "route": "content_layout",
+  "tools": [
+    "SVG parser",
+    "field generator",
+    "safe-area layout",
+    "structure fingerprint"
+  ],
+  "warnings": [
+    "REQUIRES_COMPLIANCE_REVIEW"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "action": "structure_template",
+  "parameters": {
+    "dimensions": {
+      "height": 120,
+      "length": 80,
+      "unit": "mm",
+      "width": 40
+    }
+  }
+}

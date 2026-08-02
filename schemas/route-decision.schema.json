@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "route-decision.schema.json",
+  "title": "Packaging Assistant Route Decision",
+  "type": "object",
+  "required": [
+    "route",
+    "confidence",
+    "user_goal",
+    "input_assets",
+    "available_inputs",
+    "missing_fields",
+    "next_action",
+    "needs_clarification",
+    "clarification_question",
+    "evidence"
+  ],
+  "properties": {
+    "route": {
+      "enum": [
+        "structure_template",
+        "content_layout",
+        "mockup_render",
+        "multi_stage_workflow",
+        "clarification_required",
+        "unsupported",
+        "inspect",
+        "validate",
+        "health_check"
+      ]
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "user_goal": {"type": "string"},
+    "input_assets": {"type": "array"},
+    "available_inputs": {"type": "array", "items": {"type": "string"}},
+    "missing_fields": {"type": "array", "items": {"type": "string"}},
+    "next_action": {"type": "string"},
+    "needs_clarification": {"type": "boolean"},
+    "clarification_question": {"type": ["string", "null"]},
+    "evidence": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

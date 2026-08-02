@@ -4,6 +4,7 @@ import json
 import base64
 import platform
 import sys
+import tempfile
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -20,12 +21,48 @@ from packaging_assistant.validators import validate_request
 
 
 def _health_payload() -> dict[str, Any]:
-    return {
-        "healthy": True,
-        "python": platform.python_version(),
+    repository_root = Path(__file__).resolve().parents[3]
+    schema_names = (
+        "request.schema.json",
+        "job-manifest.schema.json",
+        "content-brief.schema.json",
+        "content-spec.schema.json",
+        "provider-config.schema.json",
+        "cmf-plan.schema.json",
+        "visual-qa.schema.json",
+        "route-decision.schema.json",
+    )
+    checks: dict[str, bool] = {
         "python_supported": sys.version_info >= (3, 9),
+        "package_importable": True,
+        "cli_executable": Path(sys.executable).with_name("packaging-assistant").is_file(),
+        "schemas_present": all((repository_root / "schemas" / name).is_file() for name in schema_names),
+        "examples_present": (repository_root / "examples" / "full-workflow" / "run_demo.py").is_file(),
+    }
+    try:
+        sample = generate_structure_template(
+            {
+                "model_code": "锁底盒",
+                "dimensions": {"length": 40, "width": 20, "height": 60, "unit": "mm"},
+            }
+        )
+        checks["structure_engine"] = sample.svg.startswith("<?xml") and "LAYER_CUT" in sample.svg
+    except PackagingAssistantError:
+        checks["structure_engine"] = False
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            probe = Path(tmp) / "write-probe"
+            probe.write_text("ok", encoding="utf-8")
+            checks["output_writable"] = probe.read_text(encoding="utf-8") == "ok"
+    except OSError:
+        checks["output_writable"] = False
+    return {
+        "healthy": all(checks.values()),
+        "python": platform.python_version(),
+        "python_supported": checks["python_supported"],
         "web_required": False,
         "node_required": False,
+        "checks": checks,
         "capabilities": capability_report(),
     }
 
@@ -73,7 +110,7 @@ def run_request(
                 manual_review_required=bool(route.manual_review_items),
                 route=route_payload,
             )
-        if route.missing_fields:
+        if route.missing_fields and request.action != "route":
             return PackagingResult(
                 success=False,
                 action=request.action,

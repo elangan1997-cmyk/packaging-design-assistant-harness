@@ -2,11 +2,12 @@
 
 ## Current release
 
-Version `0.5.0` implements the local-first Harness foundation, two Box 2.0 structure models, Module B content layout, and Module C Provider/visual-QA orchestration. No browser, web server, DOM, Node.js, or npm dependency is used by the core.
+Version `0.6.0` implements the local-first Harness foundation, evidence-backed routing, two Box 2.0 structure models, Module B content layout, Module C Provider/visual-QA orchestration, 12 Evals, and a runnable full-workflow demo. No browser, web server, DOM, Node.js, or npm dependency is used by the core.
 
 ## Files and architecture
 
 - `scripts/skill_entry.py`, CLI, Python API, request validation, routing, capability discovery, isolated job workspaces, and machine-readable results are active.
+- Automatic routing combines intent flags/goal text, asset roles, and parameter facts. It reports route evidence and deterministic missing inputs instead of relying only on model confidence.
 - `src/packaging_assistant/modules/structure/` contains repository-owned deterministic geometry and SVG serialization.
 - `src/packaging_assistant/modules/content/` contains field rules, source/status models, panel layout, protected-layer validation, reports, and output writers.
 - `src/packaging_assistant/modules/mockup/` implements the Provider-only CMF flow and retains the legacy advisory boundary.
@@ -74,12 +75,12 @@ No real external Provider was executed because no user-approved endpoint/credent
 
 ## Tests and evals
 
-The release includes 38 passing unit, integration, CLI, routing, SVG geometry, content-safety, job-workspace, Provider, and Module C tests. Formal eval count is currently 0; the required 12-case `evals/` suite remains Phase 5 work.
+The release includes 46 passing unit, integration, CLI, routing, SVG geometry, content-safety, job-workspace, Provider, and Module C tests. The `evals/` suite contains 12 runnable cases: four Module A, four Module B, and four Module C; all 12 pass. The complete workflow demo passes through deterministic structure, sourced content layout, and Mock Provider visual-QA contracts.
 
 ## Known limitations and next steps
 
 1. Implement the remaining Box 2.0 models one original sample per model.
 2. Add official-source research interfaces and jurisdiction/category profiles for Module B.
 3. Add vendor-specific request/response normalizers only for Providers selected and authorized by the user.
-4. Add the required 12 eval cases and full multi-stage workflow demo.
-5. Execute one approved real-Provider CMF test when endpoint, model, budget consent, and local credential are available.
+4. Execute one approved real-Provider CMF test when endpoint, model, budget consent, and local credential are available.
+5. Add production-vendor dieline tolerances and real print-provider acceptance only after manufacturer review.

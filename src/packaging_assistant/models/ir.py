@@ -122,6 +122,14 @@ class RouteDecision:
     expected_outputs: list[str] = field(default_factory=list)
     manual_review_items: list[str] = field(default_factory=list)
     choice_prompt: dict[str, Any] | None = None
+    route: str = ""
+    confidence: float = 1.0
+    user_goal: str = ""
+    available_inputs: list[str] = field(default_factory=list)
+    next_action: str = ""
+    needs_clarification: bool = False
+    clarification_question: str | None = None
+    evidence: list[str] = field(default_factory=list)
 
 
 @dataclass

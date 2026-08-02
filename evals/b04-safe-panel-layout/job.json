@@ -1,0 +1,7 @@
+{
+  "action": "content_layout",
+  "parameters": {
+    "brief": "${CASE}/input/brief.json",
+    "template": "${CASE}/input/template.svg"
+  }
+}

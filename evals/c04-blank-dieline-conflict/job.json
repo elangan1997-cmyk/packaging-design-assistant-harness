@@ -1,0 +1,13 @@
+{
+  "action": "mockup_render",
+  "parameters": {
+    "artwork": "${CASE}/input/template.svg",
+    "dimensions": {
+      "height": 120,
+      "length": 80,
+      "unit": "mm",
+      "width": 40
+    },
+    "material": "paperboard"
+  }
+}
