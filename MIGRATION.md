@@ -13,6 +13,8 @@
 - Every task receives an isolated Job Workspace and manifest.
 - Capability status is machine-readable. Documentation is no longer treated as an implemented tool.
 - Module B now writes sourced fields and explicit placeholders into `LAYER_ARTWORK`; it does not modify structural layers or claim automatic legal compliance.
+- Module C now uses explicit Host/OpenAI-compatible/Custom REST/Mock Provider adapters. External calls require opt-in, and API keys are resolved only from environment variables.
+- Mock CMF output is a deterministic test fixture, always marked `manual_review`; it is never represented as a real render.
 
 ## Removed or moved
 

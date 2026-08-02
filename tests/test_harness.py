@@ -484,7 +484,7 @@ class HarnessContractTests(unittest.TestCase):
         self.assertTrue(report["actions"]["structure_template"]["implemented"])
         self.assertEqual(len(report["structure_models"]), 10)
         self.assertTrue(report["actions"]["content_layout"]["implemented"])
-        self.assertFalse(report["actions"]["mockup_render"]["implemented"])
+        self.assertTrue(report["actions"]["mockup_render"]["implemented"])
 
     def test_mock_provider_has_no_external_effect(self) -> None:
         response = MockProvider().invoke(ProviderRequest("render", {"x": 1}))

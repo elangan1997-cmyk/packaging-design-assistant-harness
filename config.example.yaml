@@ -1,12 +1,64 @@
-# Copy to config.yaml and keep secrets out of version control.
+# Copy to config.yaml. Keep API keys in environment variables only.
 workspace_root: ./output
-providers:
-  mock:
-    enabled: true
-  vision:
-    enabled: false
-  image_generation:
-    enabled: false
-  search:
-    enabled: false
 
+mockup:
+  dimensions:
+    length: 0  # replace with actual millimetres
+    width: 0
+    height: 0
+    unit: mm
+  structure: ""
+  material: ""
+  finishes: []
+  camera: three-quarter product view
+  background: neutral studio background
+  max_qa_retries: 2
+  provider_retries: 1
+  allow_external_api: false
+  allow_mock: false
+
+# Order is priority: user-selected -> host -> default -> fallback.
+# Endpoints are intentionally blank and must be configured by the user.
+providers:
+  - name: host-native
+    type: host
+    enabled: false
+    may_incur_cost: false
+    capabilities:
+      vision: true
+      image_generation: true
+      structured_output: true
+      file_reading: true
+
+  - name: openai-compatible
+    type: openai_compatible
+    enabled: false
+    endpoint: ""
+    model: ""
+    api_key_env: PACKAGING_PROVIDER_API_KEY
+    may_incur_cost: true
+    timeout_seconds: 60
+    capabilities:
+      vision: true
+      image_generation: true
+      structured_output: true
+      file_reading: true
+
+  - name: custom-rest
+    type: custom_rest
+    enabled: false
+    endpoint: ""
+    model: ""
+    api_key_env: PACKAGING_CUSTOM_API_KEY
+    may_incur_cost: true
+    timeout_seconds: 60
+    capabilities:
+      vision: true
+      image_generation: true
+      search: true
+      structured_output: true
+      file_reading: true
+
+  - name: mock
+    type: mock
+    enabled: false

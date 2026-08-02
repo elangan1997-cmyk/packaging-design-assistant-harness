@@ -69,7 +69,7 @@ Module A 至少需要：
 
 纸厚、糊口、出血、安全区可以使用模型的明确默认值，但必须在结果中列出。不能从图片像素猜真实物理尺寸。
 
-Module B 至少需要模板和产品资料。Module C 至少需要完成稿；材质、工艺和重点区域缺失时只做最小追问。
+Module B 至少需要模板和产品资料。Module C 至少需要完成稿、真实物理尺寸和材质；工艺和重点区域缺失时只做最小追问。空白刀模不能当作完成稿生成效果图。
 
 Module B 当前只使用用户资料与占位规则。不得补写企业、许可证、标准号、认证、成分、功效或其他监管事实。缺少资料时保留 `[待提供：…]`、`[待确认：…]` 占位符，并提示人工复核。
 
@@ -132,7 +132,7 @@ Module B 成功时读取全部五个输出，重点检查 `missing-fields.md` �
 
 ## 能力补全
 
-运行 `health_check` 获取 capability manifest。没有真实完成的 action 必须返回 `NOT_IMPLEMENTED`。Provider 未配置时只输出建议或 Dry Run，不得声称已生成效果图。
+运行 `health_check` 获取 capability manifest。没有真实完成的 action 必须返回 `NOT_IMPLEMENTED`。Module C Provider 未配置时必须明确失败；外部 API 和 Mock 都必须由用户显式允许。Mock 结果必须标记为测试输出和 `manual_review`，不得声称已生成真实效果图。
 
 ## 安全边界
 

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "visual-qa.schema.json",
+  "title": "Packaging Visual QA Result",
+  "type": "object",
+  "required": ["passed", "score", "issues", "recommended_action"],
+  "properties": {
+    "passed": {"type": "boolean"},
+    "score": {"type": "number", "minimum": 0, "maximum": 1},
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "severity", "region", "message", "retryable"],
+        "properties": {
+          "type": {"type": "string"},
+          "severity": {"enum": ["low", "medium", "high", "critical"]},
+          "region": {"type": "string"},
+          "message": {"type": "string"},
+          "retryable": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "recommended_action": {"enum": ["accept", "retry", "manual_review", "reject"]},
+    "provider": {"type": "string"},
+    "schema_version": {"type": "string"}
+  },
+  "additionalProperties": false
+}

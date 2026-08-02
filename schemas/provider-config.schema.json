@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-config.schema.json",
+  "title": "Packaging Assistant Provider Config",
+  "type": "object",
+  "properties": {
+    "mockup": {
+      "type": "object",
+      "properties": {
+        "dimensions": {"type": "object"},
+        "structure": {"type": "string"},
+        "material": {"type": "string"},
+        "finishes": {"type": "array"},
+        "max_qa_retries": {"type": "integer", "minimum": 0, "maximum": 2},
+        "provider_retries": {"type": "integer", "minimum": 0, "maximum": 2},
+        "allow_external_api": {"type": "boolean"},
+        "allow_mock": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "providers": {
+      "type": ["array", "object"]
+    }
+  },
+  "required": ["providers"],
+  "additionalProperties": true
+}

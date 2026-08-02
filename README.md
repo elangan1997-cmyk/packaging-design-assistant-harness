@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.4.0` 已完成架构底座、两个经原脚本回归验证的 Module A 盒型，以及 Module B 的首个确定性内容编排闭环。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；Module B 可将用户资料和缺失占位符安全写入这些模板。其余八个盒型与 Module C 图片生成仍如实返回 `not_implemented`。原有 CMF 参考资料完整保留。
+当前 `0.5.0` 已完成架构底座、两个经原脚本回归验证的 Module A 盒型、Module B 内容编排闭环，以及 Module C 的 Provider 调度、视觉 QA 和有限重试。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型仍按模型返回 `not_implemented`。Module C 只有在真实 Provider 已配置且用户确认外部调用后才生成真实效果图；Mock 输出始终标记为测试结果并进入人工复核。
 
 ## 自然语言使用
 
@@ -40,7 +40,7 @@ Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通
 ./install.sh
 ```
 
-要求 Python 3.9 或更高版本。基础安装无第三方运行时依赖，不安装 Node.js，也不调用付费 API。
+要求 Python 3.9 或更高版本。安装只增加 Python 包和 PyYAML，不安装 Node.js。默认不调用任何付费 API。
 
 ## 统一入口
 
@@ -93,6 +93,20 @@ packaging-assistant --output output/ content \
   --brief examples/content-layout/aquarium-salt-brief.json
 ```
 
+### Module C Provider 效果图与视觉 QA
+
+Module C 支持 Host、OpenAI-compatible、Custom REST 和 Mock 四类适配器。Provider 按配置顺序执行，失败时有限重试和回退；真实外部 Provider 必须设置 `allow_external_api: true`，Mock 必须设置 `allow_mock: true`。API Key 只能通过配置中的环境变量名称读取，不写入仓库、输出或错误记录。
+
+```bash
+cp config.example.yaml config.yaml
+# 填写真实尺寸、材质、Provider endpoint/model 和环境变量名后：
+packaging-assistant --output output/ mockup \
+  --artwork completed-artwork.svg \
+  --config config.yaml
+```
+
+输出 `mockup.png`、`cmf-plan.json`、`generation-record.json`、`visual-qa.json`、`retry-record.json` 和 `review-checklist.md`。视觉 QA 最多自动重试两次；仍不通过、不可修复或使用 Mock 时状态为 `manual_review`。
+
 ## CLI
 
 ```bash
@@ -129,6 +143,7 @@ print(result.to_dict())
 - 未经印厂确认，不得称为可直接生产或无需复核。
 - 切线、压痕、出血、安全区、糊口、纸厚补偿和模切公差必须分别验证。
 - CMF 效果图不能替代打样和正式印刷文件。
+- 本地代码只做解析、校验、记录和文件管理，不用 Pillow、OpenCV、ImageMagick、FFmpeg 或本地滤镜伪造 CMF。
 - 法规和合规内容是辅助建议，必须由有资质人员和实际来源复核。
 - 未实现的能力返回 `NOT_IMPLEMENTED`，不会用自由生成结果冒充确定性工具。
 
@@ -139,4 +154,4 @@ python3 -m unittest discover -v
 python3 -m compileall -q src scripts tests
 ```
 
-架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，当前总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。
+架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，Module B 见 [reports/PHASE3_CONTENT_LAYOUT_REPORT.md](reports/PHASE3_CONTENT_LAYOUT_REPORT.md)，Module C 见 [reports/PHASE4_PROVIDER_CMF_REPORT.md](reports/PHASE4_PROVIDER_CMF_REPORT.md)，当前总状态见 [IMPLEMENTATION_REPORT.md](IMPLEMENTATION_REPORT.md)。

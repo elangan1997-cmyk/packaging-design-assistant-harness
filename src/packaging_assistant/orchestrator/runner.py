@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import base64
 import platform
 import sys
 from dataclasses import asdict
@@ -11,6 +12,7 @@ from packaging_assistant.capabilities import capability_report
 from packaging_assistant.exceptions import PackagingAssistantError, RequestValidationError
 from packaging_assistant.models import PackagingJob, PackagingRequest, PackagingResult
 from packaging_assistant.modules.content import generate_content_layout, write_content_outputs
+from packaging_assistant.modules.mockup import generate_mockup, write_mockup_outputs
 from packaging_assistant.modules.structure import generate_structure_template, write_structure_outputs
 from packaging_assistant.parsers import inspect_asset
 from packaging_assistant.routing import route_request
@@ -179,6 +181,81 @@ def run_request(
                 outputs=outputs,
                 warnings=warnings,
                 manual_review_required=True,
+                route=route_payload,
+            )
+
+        if request.action == "mockup_render" and route.implemented:
+            generation = generate_mockup(request.parameters)
+            warnings = list(generation.warnings)
+            if output_dir is None:
+                outputs = [
+                    {
+                        "type": "image",
+                        "name": "mockup.png",
+                        "mime_type": generation.mime_type,
+                        "inline_base64": base64.b64encode(generation.image_bytes).decode("ascii"),
+                    },
+                    {"type": "json", "name": "cmf-plan.json", "inline": generation.cmf_plan},
+                    {
+                        "type": "json",
+                        "name": "generation-record.json",
+                        "inline": generation.generation_record,
+                    },
+                    {
+                        "type": "json",
+                        "name": "visual-qa.json",
+                        "inline": asdict(generation.visual_qa),
+                    },
+                    {
+                        "type": "json",
+                        "name": "retry-record.json",
+                        "inline": generation.retry_record,
+                    },
+                    {
+                        "type": "markdown",
+                        "name": "review-checklist.md",
+                        "inline": generation.review_checklist,
+                    },
+                ]
+                job_id = ""
+            else:
+                from packaging_assistant.orchestrator.workspace import JobWorkspace
+
+                job = PackagingJob(
+                    workflow=request.action,
+                    request_id=request.request_id,
+                    status=generation.status,
+                    assets=route.input_assets,
+                    finishes=list(generation.cmf_plan.get("finishes", [])),
+                    providers={
+                        "generation": generation.generation_record.get("provider", ""),
+                        "visual_qa": generation.visual_qa.provider,
+                        "mock": generation.generation_record.get("mock", False),
+                    },
+                    warnings=warnings,
+                    manual_review_required=generation.status != "completed",
+                )
+                workspace = JobWorkspace(output_dir, job).create()
+                paths = write_mockup_outputs(generation, workspace.path)
+                outputs = [
+                    {
+                        "type": "image" if path.suffix == ".png" else "json" if path.suffix == ".json" else "markdown",
+                        "path": str(path),
+                    }
+                    for path in paths
+                ]
+                job.outputs.extend(outputs)
+                workspace.write_manifest()
+                job_id = job.job_id
+            return PackagingResult(
+                success=True,
+                action=request.action,
+                request_id=request.request_id,
+                status=generation.status,
+                job_id=job_id,
+                outputs=outputs,
+                warnings=warnings,
+                manual_review_required=generation.status != "completed",
                 route=route_payload,
             )
 

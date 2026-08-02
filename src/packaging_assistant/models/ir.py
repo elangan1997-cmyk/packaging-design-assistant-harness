@@ -65,6 +65,32 @@ class PackagingContentSpec:
     schema_version: str = "1.0"
 
 
+@dataclass(frozen=True)
+class FinishDefinition:
+    finish_type: str
+    target: str
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class VisualQAIssue:
+    type: str
+    severity: str
+    region: str
+    message: str
+    retryable: bool
+
+
+@dataclass(frozen=True)
+class VisualQAResult:
+    passed: bool
+    score: float
+    issues: tuple[VisualQAIssue, ...]
+    recommended_action: str
+    provider: str = ""
+    schema_version: str = "1.0"
+
+
 @dataclass
 class PackagingRequest:
     action: str

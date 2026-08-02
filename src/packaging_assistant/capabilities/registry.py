@@ -52,10 +52,17 @@ ACTIONS: dict[str, dict[str, Any]] = {
     },
     "mockup_render": {
         "module": "mockup",
-        "implemented": False,
-        "outputs": ["mockup.png", "visual_qa.json"],
+        "implemented": True,
+        "outputs": [
+            "mockup.png",
+            "cmf-plan.json",
+            "generation-record.json",
+            "visual-qa.json",
+            "retry-record.json",
+            "review-checklist.md",
+        ],
         "providers": ["image_generation", "vision"],
-        "note": "CMF guidance remains available; executable rendering providers are not configured.",
+        "note": "Provider orchestration is implemented; a real configured provider is required for a real render.",
     },
 }
 

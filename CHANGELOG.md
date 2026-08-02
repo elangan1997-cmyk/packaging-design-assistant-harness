@@ -16,6 +16,11 @@
 - Model-specific structure capability discovery and three-file structure job output.
 - Module B deterministic content fields with sources, statuses, placeholders, semantic panel assignment, and safe SVG artwork-layer writing.
 - Five-file content-layout output, content schemas, aquarium-product example, and structure-layer integrity checks.
+- Module C Provider orchestration for Host, OpenAI-compatible, Custom REST, and deterministic Mock adapters.
+- Environment-only credential resolution, explicit paid-call and Mock opt-ins, timeout handling, finite retry, and ordered fallback.
+- CMF plan, generation record, independent visual QA, retry record, review checklist, and six-file mockup output.
+- Soft-packaging heat-seal and bottle/label protection rules, with blank-dieline and missing-dimension blockers.
+- Provider, CMF-plan, and visual-QA schemas plus Module C contract tests.
 
 ### Changed
 

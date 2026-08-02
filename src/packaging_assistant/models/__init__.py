@@ -2,6 +2,7 @@ from .ir import (
     AssetKind,
     ContentField,
     ContentSource,
+    FinishDefinition,
     PackagingAsset,
     PackagingContentSpec,
     PackagingJob,
@@ -11,6 +12,8 @@ from .ir import (
     RouteDecision,
     ValidationIssue,
     ValidationReport,
+    VisualQAIssue,
+    VisualQAResult,
     json_ready,
 )
 
@@ -18,6 +21,7 @@ __all__ = [
     "AssetKind",
     "ContentField",
     "ContentSource",
+    "FinishDefinition",
     "PackagingAsset",
     "PackagingContentSpec",
     "PackagingJob",
@@ -27,5 +31,7 @@ __all__ = [
     "RouteDecision",
     "ValidationIssue",
     "ValidationReport",
+    "VisualQAIssue",
+    "VisualQAResult",
     "json_ready",
 ]
