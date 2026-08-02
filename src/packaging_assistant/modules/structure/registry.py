@@ -52,3 +52,16 @@ def model_report() -> list[dict[str, object]]:
         }
         for model in MODELS
     ]
+
+
+def model_choices() -> list[dict[str, object]]:
+    """Return conversational choices with available models first."""
+    ordered = sorted(enumerate(MODELS), key=lambda item: (not item[1].implemented, item[0]))
+    return [
+        {
+            "value": model.code,
+            "label": model.name_zh,
+            "status": "available" if model.implemented else "not_implemented",
+        }
+        for _, model in ordered
+    ]

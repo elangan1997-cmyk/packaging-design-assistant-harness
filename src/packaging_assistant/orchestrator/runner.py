@@ -71,10 +71,23 @@ def run_request(
                 route=route_payload,
             )
         if route.missing_fields:
-            raise RequestValidationError(
-                "MISSING_REQUIRED_FIELD",
-                "缺少执行该操作所需的字段。",
-                {"missing_fields": route.missing_fields},
+            return PackagingResult(
+                success=False,
+                action=request.action,
+                request_id=request.request_id,
+                status="needs_input",
+                outputs=[],
+                warnings=[],
+                manual_review_required=bool(route.manual_review_items),
+                error={
+                    "code": "MISSING_REQUIRED_FIELD",
+                    "message": "缺少执行该操作所需的字段。",
+                    "details": {
+                        "missing_fields": route.missing_fields,
+                        "choice_prompt": route.choice_prompt,
+                    },
+                },
+                route=route_payload,
             )
 
         if request.action == "structure_template" and route.implemented:

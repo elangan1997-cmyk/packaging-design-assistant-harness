@@ -4,7 +4,7 @@ from dataclasses import asdict
 
 from packaging_assistant.capabilities import ACTIONS
 from packaging_assistant.models import PackagingRequest, RouteDecision
-from packaging_assistant.modules.structure import resolve_model
+from packaging_assistant.modules.structure import model_choices, resolve_model
 from packaging_assistant.parsers import inspect_assets
 
 
@@ -23,9 +23,16 @@ def _asset_values(parameters: dict[str, object]) -> list[str]:
 def route_request(request: PackagingRequest) -> RouteDecision:
     capability = ACTIONS[request.action]
     missing: list[str] = []
+    choice_prompt: dict[str, object] | None = None
     if request.action == "structure_template":
         if not request.parameters.get("model_code"):
             missing.append("model_code")
+            choice_prompt = {
+                "field": "model_code",
+                "message": "请选择盒型",
+                "options": model_choices(),
+                "reply_hint": "回复盒型名称或对应序号，例如：锁底盒 或 1。",
+            }
         if not request.parameters.get("dimensions"):
             missing.append("dimensions")
     elif request.action == "content_layout":
@@ -68,6 +75,7 @@ def route_request(request: PackagingRequest) -> RouteDecision:
         may_incur_cost=bool(capability.get("providers")),
         expected_outputs=list(capability.get("outputs", [])),
         manual_review_items=manual_review,
+        choice_prompt=choice_prompt,
     )
 
 

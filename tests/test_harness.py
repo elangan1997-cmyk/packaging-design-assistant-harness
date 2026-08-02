@@ -161,6 +161,31 @@ class HarnessContractTests(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertEqual(result.status, "dry_run")
         self.assertEqual(result.route["missing_fields"], ["model_code", "dimensions"])
+        prompt = result.route["choice_prompt"]
+        self.assertEqual(prompt["field"], "model_code")
+        self.assertEqual(prompt["message"], "请选择盒型")
+        self.assertEqual([item["label"] for item in prompt["options"][:2]], ["锁底盒", "手提盒"])
+        self.assertTrue(all(item["status"] == "available" for item in prompt["options"][:2]))
+        self.assertEqual(len(prompt["options"]), 10)
+
+    def test_missing_model_returns_conversational_choices(self) -> None:
+        result = run_packaging_request(
+            {
+                "action": "structure_template",
+                "parameters": {
+                    "dimensions": {"length": 80, "width": 40, "height": 120, "unit": "mm"}
+                },
+            }
+        )
+        self.assertFalse(result.success)
+        self.assertEqual(result.status, "needs_input")
+        self.assertEqual(result.error["code"], "MISSING_REQUIRED_FIELD")
+        self.assertEqual(result.route["missing_fields"], ["model_code"])
+        self.assertEqual(result.route["choice_prompt"]["message"], "请选择盒型")
+        self.assertEqual(
+            [item["status"] for item in result.route["choice_prompt"]["options"]],
+            ["available", "available"] + ["not_implemented"] * 8,
+        )
 
     def test_unfinished_structure_model_is_honestly_not_implemented(self) -> None:
         result = run_packaging_request(

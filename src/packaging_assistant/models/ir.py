@@ -61,6 +61,7 @@ class RouteDecision:
     may_incur_cost: bool = False
     expected_outputs: list[str] = field(default_factory=list)
     manual_review_items: list[str] = field(default_factory=list)
+    choice_prompt: dict[str, Any] | None = None
 
 
 @dataclass

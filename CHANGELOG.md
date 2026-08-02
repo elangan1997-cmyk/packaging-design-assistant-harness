@@ -12,6 +12,7 @@
 - Deterministic `carton.box_v2.lock_bottom` SVG generator with stable Illustrator layers and IDs.
 - Deterministic `carton.box_v2.carry_handle` generator, including two handle apertures and two side slots.
 - One active original-Illustrator regression sample per implemented box model, compared at 0.001 mm precision.
+- Conversational box-model choices when `model_code` is missing, with availability status and `needs_input` routing.
 - Model-specific structure capability discovery and three-file structure job output.
 
 ### Changed

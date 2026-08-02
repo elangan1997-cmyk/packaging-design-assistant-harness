@@ -8,7 +8,7 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.3.0` 已完成 Phase 1 架构底座，以及两个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
+当前 `0.3.1` 已完成 Phase 1 架构底座，以及两个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 和 `盒型2.0 / 手提盒` 可直接生成 SVG；其余八个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
 
 ## 自然语言使用
 
@@ -31,6 +31,8 @@
 ```
 
 Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通用户不必手动运行命令。
+
+如果用户只提供尺寸、没有说明盒型，Harness 返回 `status: needs_input` 和机器可读的 `choice_prompt`。Agent 必须显示盒型选项，让用户用名称或序号选择；已提供的尺寸继续保留。
 
 ## 安装
 
