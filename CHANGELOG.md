@@ -8,9 +8,12 @@
 - Unified Skill entrypoint, CLI, Python API, Packaging IR, isolated job workspaces, routing, asset inspection, validation, capability discovery, and Mock Provider.
 - Machine-readable `not_implemented` responses for unfinished modules.
 - JSON Schemas, examples, health check, installation scripts, and standard-library tests.
+- Ten independent Box 2.0 structure model registrations.
+- Deterministic `carton.box_v2.lock_bottom` SVG generator with stable Illustrator layers and IDs.
+- Two original-Illustrator SVG regression fixtures and geometry comparison at 0.001 mm precision.
+- Model-specific structure capability discovery and three-file structure job output.
 
 ### Changed
 
 - Refocused the Skill from CMF-only advice to three-module packaging orchestration while preserving all CMF references.
 - Lowered the core runtime floor to Python 3.9 for the active macOS environment.
-

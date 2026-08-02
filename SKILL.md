@@ -48,6 +48,12 @@ Module A 至少需要：
 - 成品长、宽、高与单位。
 - 内尺寸或外尺寸；用户未说明时，标记不确定并追问。
 
+当前已确定性实现：
+
+- `锁底盒` / `锁底` / `lock bottom` → `carton.box_v2.lock_bottom`
+
+盒型2.0 的 `直线盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`、`其它` 已分别注册，但在各自完成原脚本回归测试前必须返回 `NOT_IMPLEMENTED`，不得转用锁底盒或通用近似模板。
+
 纸厚、糊口、出血、安全区可以使用模型的明确默认值，但必须在结果中列出。不能从图片像素猜真实物理尺寸。
 
 Module B 至少需要模板和产品资料。Module C 至少需要完成稿；材质、工艺和重点区域缺失时只做最小追问。
@@ -61,6 +67,27 @@ Module B 至少需要模板和产品资料。Module C 至少需要完成稿；�
   "action": "structure_template",
   "request_id": "",
   "parameters": {}
+}
+```
+
+锁底盒请求参数：
+
+```json
+{
+  "action": "structure_template",
+  "parameters": {
+    "model_code": "carton.box_v2.lock_bottom",
+    "dimensions": {
+      "length": 100,
+      "width": 55,
+      "height": 160,
+      "unit": "mm",
+      "dimension_type": "finished_outer"
+    },
+    "shrink": 0.7,
+    "tuck_height": 15,
+    "glue_width": 14
+  }
 }
 ```
 

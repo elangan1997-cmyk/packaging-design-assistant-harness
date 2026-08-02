@@ -10,6 +10,7 @@ from typing import Any
 from packaging_assistant.capabilities import capability_report
 from packaging_assistant.exceptions import PackagingAssistantError, RequestValidationError
 from packaging_assistant.models import PackagingJob, PackagingRequest, PackagingResult
+from packaging_assistant.modules.structure import generate_structure_template, write_structure_outputs
 from packaging_assistant.parsers import inspect_asset
 from packaging_assistant.routing import route_request
 from packaging_assistant.validators import validate_request
@@ -74,6 +75,48 @@ def run_request(
                 "MISSING_REQUIRED_FIELD",
                 "缺少执行该操作所需的字段。",
                 {"missing_fields": route.missing_fields},
+            )
+
+        if request.action == "structure_template" and route.implemented:
+            generation = generate_structure_template(request.parameters)
+            warnings = list(generation.validation["warnings"])
+            if output_dir is None:
+                outputs = [
+                    {"type": "svg", "name": "template.svg", "inline": generation.svg},
+                    {"type": "json", "name": "structure_spec.json", "inline": generation.spec},
+                    {"type": "json", "name": "validation_report.json", "inline": generation.validation},
+                ]
+                job_id = ""
+            else:
+                from packaging_assistant.orchestrator.workspace import JobWorkspace
+
+                job = PackagingJob(
+                    workflow=request.action,
+                    request_id=request.request_id,
+                    status="completed",
+                    structure=generation.spec,
+                    warnings=warnings,
+                    manual_review_required=True,
+                )
+                workspace = JobWorkspace(output_dir, job).create()
+                paths = write_structure_outputs(generation, workspace.path)
+                outputs = [
+                    {"type": "svg" if path.suffix == ".svg" else "json", "path": str(path)}
+                    for path in paths
+                ]
+                job.outputs.extend(outputs)
+                workspace.write_manifest()
+                job_id = job.job_id
+            return PackagingResult(
+                success=True,
+                action=request.action,
+                request_id=request.request_id,
+                status="completed",
+                job_id=job_id,
+                outputs=outputs,
+                warnings=warnings,
+                manual_review_required=True,
+                route=route_payload,
             )
 
         payload: dict[str, Any]

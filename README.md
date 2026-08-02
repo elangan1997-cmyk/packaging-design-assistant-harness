@@ -8,14 +8,14 @@
 - **Module B — Content Layout**：包装字段、来源、规范提示和面板内容编排。
 - **Module C — CMF Mockup**：包装材质/工艺建议、效果图 Provider 和视觉质检。
 
-当前 `0.1.0` 是 Phase 1 架构底座。核心路由、IR、Job Workspace、CLI、Skill Entry、健康检查和 Mock Provider 已实现；Module A 的具体盒型、Module B 内容写入和 Module C 图片生成在通过各自测试前会明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
+当前 `0.2.0` 已完成 Phase 1 架构底座和首个经原脚本回归验证的 Module A 盒型。`盒型2.0 / 锁底盒` 可直接生成 SVG；其余九个盒型各自注册、各自返回状态，不会共用一个近似模板。Module B 内容写入和 Module C 图片生成在通过测试前仍明确返回 `not_implemented`。原有 CMF 参考资料完整保留。
 
 ## 自然语言使用
 
 安装为 Skill 后可以直接说：
 
 ```text
-做一个反插口盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模模板。
+做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模模板。
 ```
 
 或：
@@ -53,6 +53,17 @@ Agent 按 [SKILL.md](SKILL.md) 路由并调用 `scripts/skill_entry.py`。普通
 ```
 
 支持的 action：`structure_template`、`content_layout`、`mockup_render`、`inspect`、`route`、`validate`、`health_check`。实际可用状态以健康检查的 capability manifest 为准。
+
+### 已识别的盒型2.0模型
+
+`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`、`其它` 已拆成十个模型 ID。当前只有 `carton.box_v2.lock_bottom` 完成原脚本回归验证，其余模型返回模型级 `NOT_IMPLEMENTED`。
+
+锁底盒参数示例见 `examples/structure-template/box-v2-lock-bottom.json`：
+
+```bash
+packaging-assistant --output output/ structure \
+  --spec examples/structure-template/box-v2-lock-bottom.json
+```
 
 ## CLI
 
@@ -100,4 +111,4 @@ python3 -m unittest discover -v
 python3 -m compileall -q src scripts tests
 ```
 
-架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)。
+架构基线见 [ARCHITECTURE_AUDIT.md](ARCHITECTURE_AUDIT.md)，Phase 1 结果见 [reports/PHASE1_REPORT.md](reports/PHASE1_REPORT.md)，原脚本对比见 [reports/ORIGINAL_SCRIPT_BENCHMARK.md](reports/ORIGINAL_SCRIPT_BENCHMARK.md)。

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from packaging_assistant.modules.structure.registry import model_report
+
 
 ACTIONS: dict[str, dict[str, Any]] = {
     "health_check": {
@@ -30,10 +32,10 @@ ACTIONS: dict[str, dict[str, Any]] = {
     },
     "structure_template": {
         "module": "structure",
-        "implemented": False,
+        "implemented": True,
         "outputs": ["template.svg", "structure_spec.json", "validation_report.json"],
         "providers": [],
-        "note": "Pending tested deterministic model implementations.",
+        "note": "Model-specific availability; see structure_models.",
     },
     "content_layout": {
         "module": "content",
@@ -60,8 +62,8 @@ def capability_report() -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "actions": {name: dict(value) for name, value in sorted(ACTIONS.items())},
+        "structure_models": model_report(),
         "core_requires_node": False,
         "web_required": False,
         "paid_providers_called_by_default": False,
     }
-

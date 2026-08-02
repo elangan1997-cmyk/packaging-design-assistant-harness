@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 from packaging_assistant.capabilities import ACTIONS
 from packaging_assistant.models import PackagingRequest, RouteDecision
+from packaging_assistant.modules.structure import resolve_model
 from packaging_assistant.parsers import inspect_assets
 
 
@@ -38,6 +39,16 @@ def route_request(request: PackagingRequest) -> RouteDecision:
     assets = inspect_assets(_asset_values(request.parameters))
     implemented = bool(capability["implemented"])
     reason = "capability_available" if implemented else str(capability.get("note", "not_implemented"))
+    if request.action == "structure_template" and request.parameters.get("model_code"):
+        model = resolve_model(str(request.parameters["model_code"]))
+        if model is None:
+            implemented = False
+            reason = f"未知盒型：{request.parameters['model_code']}"
+        elif not model.implemented:
+            implemented = False
+            reason = f"盒型“{model.name_zh}”已独立注册，但尚未完成原脚本几何复刻。"
+        else:
+            reason = f"model_available:{model.code}"
     manual_review = []
     if request.action == "structure_template":
         manual_review.append("印厂必须复核结构、公差、纸厚补偿和模切可生产性")
@@ -62,4 +73,3 @@ def route_request(request: PackagingRequest) -> RouteDecision:
 
 def route_dict(request: PackagingRequest) -> dict[str, object]:
     return asdict(route_request(request))
-
