@@ -1,4 +1,4 @@
 interface:
-  display_name: "包装设计助理 Harness"
+  display_name: "包装设计助理 Harness 2.0"
   short_description: "对话生成包装结构 SVG，编排包装信息，并处理 CMF 工艺效果图工作流。"
   default_prompt: "使用 $packaging-design-assistant 识别我的包装目标，路由到结构模板、内容编排或 CMF 模块，并如实返回输出、验证结果和人工复核边界。"

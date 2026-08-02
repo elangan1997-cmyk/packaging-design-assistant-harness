@@ -1,4 +1,4 @@
-# Packaging Design Assistant Harness
+# 包装设计助理 Harness 2.0
 
 这是一个本地优先、对话驱动的包装设计 Harness。普通用户只需要在 Codex、Claude Code 或其他支持 Skill 的 Agent 中说明包装类型、尺寸和任务目标；Agent 负责调用统一 Python 入口，不需要网页、Web Server 或 Node.js。
 

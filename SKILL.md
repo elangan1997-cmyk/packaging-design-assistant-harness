@@ -3,7 +3,7 @@ name: packaging-design-assistant
 description: 对话式包装设计 Harness。用于用户要求生成包装刀模 SVG、可设计 SVG、包装结构模板、包装背标/文案/法规字段排版，或包装 CMF 工艺效果图与视觉质检。
 ---
 
-# Packaging Design Assistant Harness
+# 包装设计助理 Harness 2.0
 
 ## 何时使用
 

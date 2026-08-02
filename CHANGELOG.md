@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Renamed
+
+- Display name updated to `包装设计助理 Harness 2.0`; the Skill invocation name `packaging-design-assistant` remains unchanged for compatibility.
+
 ### Added
 
 - Local-first Packaging Design Assistant Harness foundation.
