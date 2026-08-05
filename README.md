@@ -1,77 +1,76 @@
 # 包装设计助理 Harness 2.0
 
-> 一个对话式、本地优先的包装 Harness：从「盒型 + 尺寸」生成可复制进 Illustrator 的 SVG 刀模，也能继续完成内容编排、CMF 工艺规划和 Provider 视觉 QA。
+> 核心用途：把已有的包装平面稿、刀模图或完成设计稿，转成可以直接沟通的立体 CMF 工艺效果图；同时提供确定性刀模 SVG 和内容编排能力。
 
-**English overview** — *Packaging Design Assistant Harness is a local-first, conversation-driven toolkit for packaging structure, content layout, and CMF workflows. It turns natural-language requests into deterministic Illustrator-compatible SVG artifacts, auditable content outputs, and provider-gated visual QA while keeping the original artwork and manufacturing boundaries explicit.*
+**English overview** — *Packaging Design Assistant Harness turns existing packaging artwork into presentation-ready CMF mockups while preserving the original layout, text, logo, colors, and structure. It also provides deterministic Illustrator-compatible dielines, content layout, provider orchestration, and visual QA.*
 
-![Packaging Design Assistant Harness 2.0 demo](docs/assets/packaging-assistant-demo.gif)
+## 核心价值：平面稿 → 包装工艺效果图
 
-这段 32 秒 Demo 展示真实的 A → B → Mock C 工作流。Mock Provider 只用于验证编排和输出契约，不是假装已经生成真实 CMF 成片；真实图像 Provider 必须单独配置并经过人工复核。
+客户最难理解的，通常不是一张平面图怎么画，而是这张展开图折成立体包装后到底长什么样、材质和工艺会有什么感觉。
 
-### 抖音视频示例
-
-[在抖音观看完整介绍视频](https://v.douyin.com/SDDIIfB12Wk/)
-
-视频展示了一个典型的包装 CMF 流程：上传平面展开图，尽量保留原来的版式、文字、颜色和主视觉，再生成带烫金、烫银、局部 UV、击凸或镭射质感的包装效果图。它适合方案提案、工艺沟通和打样前的方向确认。
-
-![包装 CMF Skill 介绍封面](docs/assets/july-11-packaging-cmf-cover.jpg)
-
-![对话输入、SVG 面板拆分和效果图预览](docs/assets/july-11-workflow-strip.jpg)
-
-从左到右分别是：对话中的尺寸/材质输入、SVG 刀模面板拆分、效果图预览。封面和截图用于帮助读者理解流程，不作为本仓库代码已完成真实生成、尺寸准确或可直接生产的独立证明；文字、刀模和工艺参数仍需与印厂确认，效果图不能替代打样和生产文件。
-
-## 你可以直接拿它做什么
-
-### 核心用途：把包装平面稿变成工艺效果图
-
-它最重要的作用不是重新设计一套包装，而是把客户难以想象的平面展开图，转成可以直接沟通的立体包装效果图。你提供已有的平面稿、完成设计稿或刀模图，再说清楚尺寸、材质和工艺：
+这个 Harness 的首要作用就是解决这个沟通问题：你提供已有的平面展开图、完成设计稿或刀模图，再补充真实尺寸、材质和工艺，它负责规划并生成包装 CMF 效果图流程。
 
 ```text
 保留这张包装的盒型、文字、Logo、颜色和版式，尺寸 80 × 40 × 120 mm，做哑膜加 Logo 局部 UV 和烫金的包装效果图。
 ```
 
-它适合三个实际阶段：
+它适合三个阶段：
 
 - **方案提案**：让客户先看到折叠后的成品方向，不必只看难理解的展开图。
 - **工艺沟通**：提前表达哑膜、烫金/烫银、局部 UV、击凸、镭射银卡等视觉质感。
 - **打样前确认**：先发现版式、视角、材质和工艺方向的问题，减少反复修改。
 
-配置真实图像 Provider 后，Module C 输出 `mockup.png`、`cmf-plan.json`、Provider 生成记录、视觉 QA 和人工复核清单；当前 README 的 Demo 使用 Mock Provider，只证明流程契约，不冒充真实效果图。
+配置真实图像 Provider 后，Module C 可输出 `mockup.png`、`cmf-plan.json`、Provider 生成记录、视觉 QA 和人工复核清单。仓库内的 Demo 使用 Mock Provider，只证明流程契约，不冒充真实 CMF 成片。
 
-### 同一套对话也能处理结构和内容
+效果图会尽量保留原有盒型、文字、Logo、颜色、版式和主视觉，只在指定区域表达材质和工艺。它不能替代打样、正式印前文件或印厂确认。
 
-你不需要安装旧版 Illustrator 脚本、打开网页或手动画刀模。直接告诉 Agent 包装类型、尺寸和目标，它会按任务路由：
+## 抖音视频示例
+
+[在抖音观看完整介绍视频](https://v.douyin.com/SDDIIfB12Wk/)
+
+视频展示了一个典型的包装 CMF 流程：上传平面展开图，保留原来的版式、文字、颜色和主视觉，再生成带烫金、烫银、局部 UV、击凸或镭射质感的包装效果图。
+
+![包装 CMF Skill 介绍封面](docs/assets/july-11-packaging-cmf-cover.jpg)
+
+![对话输入、SVG 面板拆分和效果图预览](docs/assets/july-11-workflow-strip.jpg)
+
+从左到右分别是：对话中的尺寸/材质输入、SVG 刀模面板拆分、效果图预览。封面和截图用于帮助理解流程，不作为本仓库代码已完成真实生成、尺寸准确或可直接生产的独立证明；文字、刀模和工艺参数仍需与印厂确认。
+
+## 一张图看懂工作流
+
+```mermaid
+flowchart LR
+    U["已有平面稿 / 完成设计稿<br/>+ 尺寸 + 材质工艺"] --> S["Skill Entry<br/>自然语言路由"]
+    S --> I["Request IR<br/>Schema / 证据 / Dry Run"]
+    I --> C["Module C<br/>CMF 方案 + Provider + Visual QA"]
+    C --> CO["mockup.png<br/>cmf-plan.json / visual-qa.json"]
+    I -. 辅助 .-> A["Module A<br/>确定性刀模 SVG"]
+    I -. 辅助 .-> B["Module B<br/>内容编排"]
+    A --> AO["template.svg"]
+    B --> BO["content-layout.svg<br/>来源与复核清单"]
+    C --> P["Host / OpenAI-compatible<br/>Custom REST / Mock"]
+    CO --> R["设计师检查<br/>印厂确认 / 打样"]
+    AO --> R
+    BO --> R
+```
+
+## 其他能力：刀模和内容编排
+
+CMF 效果图是首要使用场景，结构和内容模块负责把前置文件准备好，或在没有完成设计稿时单独使用：
 
 | 你提供的内容 | Agent 会做什么 | 你会拿到什么 |
 |---|---|---|
-| 完成设计稿 + 尺寸 + 材质/工艺 | 保护原稿，再规划 CMF 效果图流程 | `mockup.png`、CMF 计划、视觉 QA 和人工复核清单 |
 | 盒型 + 长宽高 | 调用对应的确定性盒型模型 | 可复制进 Illustrator 的 `template.svg` |
 | 只有尺寸，没有盒型 | 先列出可用盒型，让你选择 | `choice_prompt`，尺寸自动保留 |
 | SVG 刀模 + 产品资料 | 把资料放进安全面板，不碰刀线 | `content-layout.svg`、来源报告和缺失字段清单 |
 
-它主要解决三类实际问题：
+当前可直接生成 SVG 的盒型：`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`。飞机盒按用户提供的 `资源 9.svg` 基准建模，默认保留内尺寸、`0.3 mm` 纸厚和 `5 mm` 出血记录。“其它”盒型明确返回 `NOT_IMPLEMENTED`，不会拿相似盒型顶替。
 
-1. **客户看不懂平面展开图**：先把盒型折成立体，再沟通设计方向和工艺质感。
-2. **工艺效果难以提前表达**：用材质和工艺方案把哑膜、UV、烫金、击凸等效果说清楚，但不冒充打样结果。
-3. **结构和原稿容易被误改**：刀模由确定性模型输出，CMF 流程保护原有盒型、文字、Logo、版式和颜色；“其它”盒型明确返回 `NOT_IMPLEMENTED`，不会拿相似盒型顶替。
+## 32 秒 Harness Demo
 
-## 架构一览
+![Packaging Design Assistant Harness 2.0 demo](docs/assets/packaging-assistant-demo.gif)
 
-```mermaid
-flowchart LR
-    U["设计师<br/>Codex / Claude Code / CLI"] --> S["Skill Entry<br/>自然语言路由"]
-    S --> I["Request IR<br/>Schema / 证据 / Dry Run"]
-    I --> A["Module A<br/>确定性结构 SVG"]
-    I --> B["Module B<br/>内容编排"]
-    I --> C["Module C<br/>CMF Provider + Visual QA"]
-    A --> AO["template.svg<br/>刀模结构"]
-    B --> BO["content-layout.svg<br/>来源与复核清单"]
-    C --> CO["cmf-plan.json<br/>mockup / visual-qa"]
-    C --> P["Host / OpenAI-compatible<br/>Custom REST / Mock"]
-    AO --> R["设计师检查<br/>印厂确认 / 打样"]
-    BO --> R
-    CO --> R
-```
+这段 Demo 展示 A → B → Mock C 的完整编排：结构 SVG、内容布局、CMF Provider 契约和视觉 QA。Mock Provider 只用于测试输出和人工复核，不代表真实图像 Provider 已经配置。
 
 ## 60 秒快速运行
 
@@ -90,29 +89,38 @@ cd packaging-design-assistant-harness
   --output output/full-workflow-demo
 ```
 
-Demo 会输出 `template.svg`、`content-layout.svg`、CMF 计划、视觉 QA 和人工复核记录。最后一阶段是 Mock Provider；要生成真实效果图，需换成经过确认的 Provider 配置。
+Demo 会输出 `template.svg`、`content-layout.svg`、CMF 计划、视觉 QA 和人工复核记录。要生成真实效果图，需换成经过确认的 Provider 配置。
 
-## 对话式使用
+## 对话示例
 
-安装为 Skill 后，直接在 Codex、Claude Code 或其他支持 Skill 的 Agent 中说：
+### 重点：生成包装效果图
+
+```text
+这是我的包装平面稿。请保留原来的文字、Logo、颜色和版式，尺寸是 80 × 40 × 120 mm。
+材质用白卡纸，工艺做哑膜、Logo 局部 UV 和烫金，生成包装工艺效果图。
+```
+
+### 辅助：生成刀模 SVG
 
 ```text
 做一个锁底盒，80 × 40 × 120 mm，生成可以复制进 Illustrator 的 SVG 刀模。
 ```
 
-```text
-做一个手提盒，100 × 60 × 160 mm，生成 SVG 刀模模板。
-```
+### 辅助：没有盒型时先选择
 
 ```text
-保留这张包装的盒型、文字、Logo、颜色和版式，尺寸 80 × 40 × 120 mm，做哑膜加 Logo 局部 UV 的包装效果图。
+我需要一个 100 × 60 × 160 mm 的包装盒，先给我可以生成的盒型选项。
 ```
 
-如果用户只说了尺寸、没有说盒型，Harness 会先返回盒型选项；已经提供的尺寸会保留。“其它”盒型目前明确返回 `NOT_IMPLEMENTED`，不会用近似盒型冒充。
-
-当前可直接生成 SVG 的盒型：`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`。飞机盒按用户提供的 `资源 9.svg` 基准建模，默认保留内尺寸、`0.3 mm` 纸厚和 `5 mm` 出血记录。
+如果用户只说了尺寸、没有说盒型，Harness 会先返回盒型选项；已经提供的尺寸会保留。“其它”盒型返回 `NOT_IMPLEMENTED`，不使用近似结构。
 
 ## 三个模块
+
+### Module C — CMF Mockup（首要模块）
+
+输入完成设计稿、真实物理尺寸、材质和工艺。流程保护原稿结构、文字、Logo、版式和颜色，只在指定区域表达 CMF。
+
+空白刀模只能生成结构模板，不能直接当作完成设计稿制作最终 CMF 效果图。
 
 ### Module A — Structure Template
 
@@ -120,21 +128,7 @@ Demo 会输出 `template.svg`、`content-layout.svg`、CMF 计划、视觉 QA �
 
 ### Module B — Content Layout
 
-接收 SVG 模板和产品资料，输出：
-
-- `content-layout.svg`
-- `content-spec.json`
-- `source-report.md`
-- `missing-fields.md`
-- `review-checklist.md`
-
-缺少企业、许可证、标准号、认证、成分或功效信息时使用明确占位符，不自动编造法规事实。
-
-### Module C — CMF Mockup
-
-之前的 CMF 包装效果图能力保留在 2.0 中。输入完成设计稿、真实物理尺寸、材质和工艺后，流程会保护原稿结构、文字、Logo、版式和颜色，只在指定区域表达 CMF。
-
-空白刀模只能生成结构模板，不能直接当作完成设计稿制作最终 CMF 效果图。效果图不能替代 Illustrator/CAD 刀模确认、打样和正式印前文件。
+接收 SVG 模板和产品资料，输出 `content-layout.svg`、`content-spec.json`、`source-report.md`、`missing-fields.md` 和 `review-checklist.md`。缺少企业、许可证、标准号、认证、成分或功效信息时使用明确占位符，不自动编造法规事实。
 
 ## Provider 预留：DeepSeek-compatible
 
@@ -152,7 +146,7 @@ Demo 会输出 `template.svg`、`content-layout.svg`、CMF 计划、视觉 QA �
 #   api_key_env: DEEPSEEK_API_KEY
 ```
 
-如果接入的是只支持文本的 DeepSeek-compatible 模型，它可以用于后续的路由、内容规划或结构化输出；Module C 的真实效果图仍必须使用声明支持 `image_generation` 的 Provider，并经过费用确认和视觉 QA。
+如果接入的是只支持文本的 DeepSeek-compatible 模型，它可以用于路由、内容规划或结构化输出；Module C 的真实效果图仍必须使用声明支持 `image_generation` 的 Provider，并经过费用确认和视觉 QA。
 
 ## CLI 与 Python API
 
@@ -186,19 +180,6 @@ packaging-assistant health-check
 }
 ```
 
-Python 调用：
-
-```python
-from packaging_assistant import run_packaging_request
-
-result = run_packaging_request({
-    "action": "health_check",
-    "request_id": "python-example",
-    "parameters": {},
-})
-print(result.to_dict())
-```
-
 ## 安全与精度边界
 
 - 物理尺寸是效果图和结构比例的前置条件，不能从像素或图片尺寸猜测 mm。
@@ -206,6 +187,7 @@ print(result.to_dict())
 - 本地代码只做解析、校验、记录和文件管理，不用本地滤镜伪造 CMF 证明。
 - API Key 只从环境变量读取，不写入仓库、输出或错误记录。
 - Provider 未配置、结果为 Mock 或视觉 QA 未通过时，必须明确标记人工复核。
+- 效果图不能替代打样、正式印前文件或印厂确认。
 - 未实现能力返回 `NOT_IMPLEMENTED`，不会用自由生成结果冒充确定性工具。
 
 ## 测试
@@ -216,7 +198,7 @@ python3 -m compileall -q src scripts tests
 .venv/bin/python evals/run_evals.py
 ```
 
-当前基线：53 项自动化测试、12 个 Evals。README 顶部 Demo 使用 Mock Provider，不能作为真实 CMF 视觉质量证明。
+当前基线：53 项自动化测试、12 个 Evals。README 的 Demo 使用 Mock Provider，不能作为真实 CMF 视觉质量证明。
 
 ## 审计、实现与参考
 
