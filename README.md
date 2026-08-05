@@ -81,21 +81,6 @@ Demo 会输出 `template.svg`、`content-layout.svg`、CMF 计划、视觉 QA �
 
 当前可直接生成 SVG 的盒型：`直线盒`、`锁底盒`、`飞机盒`、`上盖盒`、`同向盖`、`粘底盒`、`挂耳盒`、`手提盒`、`纸箱`。飞机盒按用户提供的 `资源 9.svg` 基准建模，默认保留内尺寸、`0.3 mm` 纸厚和 `5 mm` 出血记录。
 
-## 为什么它是 Harness，而不仅是 Skill
-
-Skill 主要告诉 Agent「什么时候触发、应该怎么问、怎么调用」。Harness 还要把这些约束落成可执行、可验证的工作系统：
-
-| 维度 | 只有 Skill | Packaging Design Assistant Harness |
-|---|---|---|
-| 入口 | 提示词和规则 | Skill + 统一 Python CLI/API |
-| 结构 | 模型自由描述 | Module A 确定性几何、SVG 图层和稳定 ID |
-| 输出 | 一段回复 | 独立 Job workspace、SVG、JSON、报告和复核清单 |
-| 可靠性 | 依赖模型自报完成 | Schema、状态机、`NOT_IMPLEMENTED`、Dry Run、证据路由 |
-| CMF | 生成建议 | Provider 边界、费用开关、有限重试、视觉 QA、人工复核 |
-| 回归 | 难以重复 | 53 项自动化测试、12 个 Evals、原脚本 SVG fixture 对照 |
-
-因此它可以被对话触发，也可以被脚本、CI 或其他 Agent 作为一个可检查的本地执行单元调用。
-
 ## 三个模块
 
 ### Module A — Structure Template
