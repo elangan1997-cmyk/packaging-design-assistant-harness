@@ -1,7 +1,7 @@
 # a04-unimplemented-model
 
 - Module: A
-- Input: registered straight box model
+- Input: registered custom/other box model
 - Expected route: `structure_template`
 - Expected tools: `model registry`
 - Expected outputs: none
