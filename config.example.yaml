@@ -44,6 +44,16 @@ providers:
       structured_output: true
       file_reading: true
 
+  # Reserved profile for a future DeepSeek-compatible integration.
+  # Keep disabled until the endpoint, model, capabilities, cost, and output
+  # contract are verified for the intended workflow.
+  # - name: deepseek-compatible
+  #   type: openai_compatible
+  #   enabled: false
+  #   endpoint: ""
+  #   model: ""
+  #   api_key_env: DEEPSEEK_API_KEY
+
   - name: custom-rest
     type: custom_rest
     enabled: false
